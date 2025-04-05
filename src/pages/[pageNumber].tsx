@@ -85,6 +85,7 @@ const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection =
   
   // If the page is not found and it's not the end page, return a 404-like page
   if (!page && !router.isFallback) {
+    console.error(`Page not found: ${pageNumber}`);
     return (
       <div style={{ 
         display: 'flex', 
@@ -93,10 +94,11 @@ const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection =
         alignItems: 'center',
         height: '100vh',
         padding: '2rem',
-        textAlign: 'center'
+        textAlign: 'center',
+        background: 'var(--background)'
       }}>
-        <h1 style={{ marginBottom: '2rem' }}>Page Not Found</h1>
-        <p style={{ marginBottom: '2rem' }}>Sorry, the comic page you&apos;re looking for doesn&apos;t exist.</p>
+        <h1 style={{ marginBottom: '2rem', color: 'var(--foreground)' }}>Page Not Found</h1>
+        <p style={{ marginBottom: '2rem', color: 'var(--foreground)' }}>Sorry, the comic page you&apos;re looking for doesn&apos;t exist.</p>
         <Button onClick={() => router.push('/')}>Return Home</Button>
       </div>
     );

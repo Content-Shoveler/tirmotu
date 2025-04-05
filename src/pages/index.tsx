@@ -9,9 +9,14 @@ export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const startReading = () => {
+  const startReading = async () => {
     setIsLoading(true);
-    router.push('/1');
+    try {
+      await router.push('/1');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      setIsLoading(false);
+    }
   };
 
   return (
