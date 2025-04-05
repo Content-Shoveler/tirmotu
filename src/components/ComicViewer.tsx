@@ -127,7 +127,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
         }}
         transition={{
           type: 'spring',
-          duration: 0.8,
+          duration: currentFocusPoint?.transitionSpeed || 0.8,
           bounce: 0.1,
         }}
       >

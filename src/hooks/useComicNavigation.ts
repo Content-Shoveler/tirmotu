@@ -29,7 +29,15 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
   const router = useRouter();
   const [currentPageId, setCurrentPageId] = useState<number>(initialPageId);
   const [currentFocusPointIndex, setCurrentFocusPointIndex] = useState<number>(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(false);
+  // Initialize autoplay state from localStorage if available
+  const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(() => {
+    // Only access localStorage on client side
+    if (typeof window !== 'undefined') {
+      const savedState = localStorage.getItem('comic-autoplay');
+      return savedState === 'true';
+    }
+    return false;
+  });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   // Get focus points for current page
@@ -109,7 +117,12 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
   }, [focusPoints.length]);
   
   const toggleAutoPlay = useCallback(() => {
-    setIsAutoPlaying(!isAutoPlaying);
+    const newState = !isAutoPlaying;
+    setIsAutoPlaying(newState);
+    // Save to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('comic-autoplay', newState.toString());
+    }
   }, [isAutoPlaying]);
   
   // Auto-play effect
@@ -119,9 +132,13 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
     if (isAutoPlaying && currentFocusPoint) {
       timer = setTimeout(() => {
         const success = nextFocusPoint();
-        if (!success) {
-          setIsAutoPlaying(false);
+      if (!success) {
+        setIsAutoPlaying(false);
+        // Also update localStorage when autoplay stops automatically
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('comic-autoplay', 'false');
         }
+      }
       }, currentFocusPoint.duration * 1000);
     }
     

@@ -4,6 +4,7 @@ export interface FocusPoint {
   y: number;        // Vertical position as percentage (0-100)
   scale: number;    // Zoom level (e.g., 1.0 = 100%, 2.0 = 200%)
   duration: number; // Seconds to stay on this point
+  transitionSpeed?: number; // Seconds to transition to this point (defaults to 0.8)
   description?: string; // Optional caption
 }
 

@@ -10,10 +10,10 @@ export const comicData: ComicData = {
       imageUrl: "https://picsum.photos/id/237/900/1600",
       title: "The Beginning",
       focusPoints: [
-        { x: 50, y: 20, scale: 1, duration: 2 },
-        { x: 30, y: 40, scale: 1.5, duration: 3, description: "The hero begins their journey..." },
-        { x: 60, y: 60, scale: 2, duration: 3 },
-        { x: 50, y: 80, scale: 1.5, duration: 2, description: "What lies ahead is unknown." },
+        { x: 50, y: 20, scale: 1, duration: 2, transitionSpeed: 0.5 },
+        { x: 30, y: 40, scale: 1.5, duration: 3, transitionSpeed: 1.2, description: "The hero begins their journey..." },
+        { x: 60, y: 60, scale: 2, duration: 3, transitionSpeed: 0.8 },
+        { x: 50, y: 80, scale: 1.5, duration: 2, transitionSpeed: 1.5, description: "What lies ahead is unknown." },
       ]
     },
     {
@@ -21,10 +21,10 @@ export const comicData: ComicData = {
       imageUrl: "https://picsum.photos/id/238/900/1600",
       title: "The Encounter",
       focusPoints: [
-        { x: 50, y: 20, scale: 1, duration: 2 },
-        { x: 20, y: 30, scale: 2, duration: 3, description: "A strange figure appears..." },
-        { x: 70, y: 50, scale: 1.5, duration: 3 },
-        { x: 50, y: 70, scale: 2, duration: 2, description: "They offer a mysterious object." },
+        { x: 50, y: 20, scale: 1, duration: 2, transitionSpeed: 0.3 },
+        { x: 20, y: 30, scale: 2, duration: 3, transitionSpeed: 2.0, description: "A strange figure appears..." },
+        { x: 70, y: 50, scale: 1.5, duration: 3, transitionSpeed: 0.6 },
+        { x: 50, y: 70, scale: 2, duration: 2, transitionSpeed: 1.0, description: "They offer a mysterious object." },
       ]
     },
     {
@@ -32,10 +32,10 @@ export const comicData: ComicData = {
       imageUrl: "https://picsum.photos/id/239/900/1600",
       title: "The Decision",
       focusPoints: [
-        { x: 50, y: 30, scale: 1, duration: 2 },
-        { x: 30, y: 40, scale: 1.5, duration: 3, description: "The hero must choose..." },
-        { x: 70, y: 40, scale: 1.5, duration: 3 },
-        { x: 50, y: 70, scale: 2, duration: 2, description: "Each path has consequences." },
+        { x: 50, y: 30, scale: 1, duration: 2, transitionSpeed: 0.4 },
+        { x: 30, y: 40, scale: 1.5, duration: 3, transitionSpeed: 1.8, description: "The hero must choose..." },
+        { x: 70, y: 40, scale: 1.5, duration: 3, transitionSpeed: 0.7 },
+        { x: 50, y: 70, scale: 2, duration: 2, transitionSpeed: 2.5, description: "Each path has consequences." },
       ]
     },
     {
@@ -43,10 +43,10 @@ export const comicData: ComicData = {
       imageUrl: "https://picsum.photos/id/240/900/1600",
       title: "The Journey",
       focusPoints: [
-        { x: 50, y: 20, scale: 1, duration: 2 },
-        { x: 20, y: 40, scale: 1.8, duration: 3, description: "Through strange landscapes..." },
-        { x: 80, y: 50, scale: 1.5, duration: 3 },
-        { x: 50, y: 80, scale: 2, duration: 2, description: "Every step reveals new wonders." },
+        { x: 50, y: 20, scale: 1, duration: 2, transitionSpeed: 0.6 },
+        { x: 20, y: 40, scale: 1.8, duration: 3, transitionSpeed: 0.9, description: "Through strange landscapes..." },
+        { x: 80, y: 50, scale: 1.5, duration: 3, transitionSpeed: 1.2 },
+        { x: 50, y: 80, scale: 2, duration: 2, transitionSpeed: 0.5, description: "Every step reveals new wonders." },
       ]
     },
     {
@@ -54,10 +54,10 @@ export const comicData: ComicData = {
       imageUrl: "https://picsum.photos/id/241/900/1600",
       title: "The Challenge",
       focusPoints: [
-        { x: 50, y: 20, scale: 1, duration: 2 },
-        { x: 30, y: 40, scale: 2, duration: 3, description: "A test of courage awaits..." },
-        { x: 70, y: 60, scale: 1.5, duration: 3 },
-        { x: 50, y: 80, scale: 1.8, duration: 2, description: "Will they overcome it?" },
+        { x: 50, y: 20, scale: 1, duration: 2, transitionSpeed: 1.0 },
+        { x: 30, y: 40, scale: 2, duration: 3, transitionSpeed: 0.4, description: "A test of courage awaits..." },
+        { x: 70, y: 60, scale: 1.5, duration: 3, transitionSpeed: 2.0 },
+        { x: 50, y: 80, scale: 1.8, duration: 2, transitionSpeed: 0.8, description: "Will they overcome it?" },
       ]
     }
   ]
