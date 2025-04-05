@@ -1,16 +1,16 @@
 import { ComicData, ComicPage } from '@/utils/types';
 
-// Sample comic data for testing and demonstration
+// Comic data using real images
 export const comicData: ComicData = {
-  title: "The Adventure Begins",
-  description: "A journey through an unknown world with unexpected turns and surprises.",
+  title: "Tirmotu",
+  description: "A journey through the political landscape of Tirmotu.",
   pages: [
     {
       id: 1,
-      imageUrl: "https://picsum.photos/id/237/900/1600",
-      title: "The Beginning",
+      imageUrl: "/comic/page-1.png",
+      title: "The Game",
       focusPoints: [
-        { x: 50, y: 20, scale: 1, duration: 2, transitionSpeed: 0.5 },
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 0.5 },
         { x: 30, y: 40, scale: 1.5, duration: 3, transitionSpeed: 1.2, description: "The hero begins their journey..." },
         { x: 60, y: 60, scale: 2, duration: 3, transitionSpeed: 0.8 },
         { x: 50, y: 80, scale: 1.5, duration: 2, transitionSpeed: 1.5, description: "What lies ahead is unknown." },
@@ -18,10 +18,10 @@ export const comicData: ComicData = {
     },
     {
       id: 2,
-      imageUrl: "https://picsum.photos/id/238/900/1600",
-      title: "The Encounter",
+      imageUrl: "/comic/page-2.png",
+      title: "The Game",
       focusPoints: [
-        { x: 50, y: 20, scale: 1, duration: 2, transitionSpeed: 0.3 },
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 0.3 },
         { x: 20, y: 30, scale: 2, duration: 3, transitionSpeed: 2.0, description: "A strange figure appears..." },
         { x: 70, y: 50, scale: 1.5, duration: 3, transitionSpeed: 0.6 },
         { x: 50, y: 70, scale: 2, duration: 2, transitionSpeed: 1.0, description: "They offer a mysterious object." },
@@ -29,10 +29,10 @@ export const comicData: ComicData = {
     },
     {
       id: 3,
-      imageUrl: "https://picsum.photos/id/239/900/1600",
-      title: "The Decision",
+      imageUrl: "/comic/page-3.png",
+      title: "The Game",
       focusPoints: [
-        { x: 50, y: 30, scale: 1, duration: 2, transitionSpeed: 0.4 },
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 0.4 },
         { x: 30, y: 40, scale: 1.5, duration: 3, transitionSpeed: 1.8, description: "The hero must choose..." },
         { x: 70, y: 40, scale: 1.5, duration: 3, transitionSpeed: 0.7 },
         { x: 50, y: 70, scale: 2, duration: 2, transitionSpeed: 2.5, description: "Each path has consequences." },
@@ -40,10 +40,10 @@ export const comicData: ComicData = {
     },
     {
       id: 4,
-      imageUrl: "https://picsum.photos/id/240/900/1600",
-      title: "The Journey",
+      imageUrl: "/comic/page-4.png",
+      title: "Great Houses",
       focusPoints: [
-        { x: 50, y: 20, scale: 1, duration: 2, transitionSpeed: 0.6 },
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 0.6 },
         { x: 20, y: 40, scale: 1.8, duration: 3, transitionSpeed: 0.9, description: "Through strange landscapes..." },
         { x: 80, y: 50, scale: 1.5, duration: 3, transitionSpeed: 1.2 },
         { x: 50, y: 80, scale: 2, duration: 2, transitionSpeed: 0.5, description: "Every step reveals new wonders." },
@@ -51,13 +51,90 @@ export const comicData: ComicData = {
     },
     {
       id: 5,
-      imageUrl: "https://picsum.photos/id/241/900/1600",
-      title: "The Challenge",
+      imageUrl: "/comic/page-5.png",
+      title: "Great Houses",
       focusPoints: [
-        { x: 50, y: 20, scale: 1, duration: 2, transitionSpeed: 1.0 },
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 1.0 },
         { x: 30, y: 40, scale: 2, duration: 3, transitionSpeed: 0.4, description: "A test of courage awaits..." },
         { x: 70, y: 60, scale: 1.5, duration: 3, transitionSpeed: 2.0 },
         { x: 50, y: 80, scale: 1.8, duration: 2, transitionSpeed: 0.8, description: "Will they overcome it?" },
+      ]
+    },
+    {
+      id: 6,
+      imageUrl: "/comic/page-6.png",
+      title: "Great Houses",
+      focusPoints: [
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 0.5 },
+        { x: 30, y: 40, scale: 1.5, duration: 3, transitionSpeed: 1.2, description: "The path forward emerges..." },
+        { x: 60, y: 60, scale: 2, duration: 3, transitionSpeed: 0.8 },
+        { x: 50, y: 80, scale: 1.5, duration: 2, transitionSpeed: 1.5, description: "Alliances must be formed." },
+      ]
+    },
+    {
+      id: 7,
+      imageUrl: "/comic/page-7.png",
+      title: "The Plot",
+      focusPoints: [
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 0.3 },
+        { x: 20, y: 30, scale: 2, duration: 3, transitionSpeed: 2.0, description: "Secrets begin to unfold..." },
+        { x: 70, y: 50, scale: 1.5, duration: 3, transitionSpeed: 0.6 },
+        { x: 50, y: 70, scale: 2, duration: 2, transitionSpeed: 1.0, description: "Not everything is as it seems." },
+      ]
+    },
+    {
+      id: 8,
+      imageUrl: "/comic/page-8.png",
+      title: "Young Sita Suzeran",
+      focusPoints: [
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 0.4 },
+        { x: 30, y: 40, scale: 1.5, duration: 3, transitionSpeed: 1.8, description: "A new character emerges..." },
+        { x: 70, y: 40, scale: 1.5, duration: 3, transitionSpeed: 0.7 },
+        { x: 50, y: 70, scale: 2, duration: 2, transitionSpeed: 2.5, description: "Her story begins to unfold." },
+      ]
+    },
+    {
+      id: 9,
+      imageUrl: "/comic/page-9.png",
+      title: "Young Sita",
+      focusPoints: [
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 0.6 },
+        { x: 20, y: 40, scale: 1.8, duration: 3, transitionSpeed: 0.9, description: "The past reveals itself..." },
+        { x: 80, y: 50, scale: 1.5, duration: 3, transitionSpeed: 1.2 },
+        { x: 50, y: 80, scale: 2, duration: 2, transitionSpeed: 0.5, description: "Each memory holds importance." },
+      ]
+    },
+    {
+      id: 10,
+      imageUrl: "/comic/page-10.png",
+      title: "Young Sita",
+      focusPoints: [
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 1.0 },
+        { x: 30, y: 40, scale: 2, duration: 3, transitionSpeed: 0.4, description: "Decisions are made..." },
+        { x: 70, y: 60, scale: 1.5, duration: 3, transitionSpeed: 2.0 },
+        { x: 50, y: 80, scale: 1.8, duration: 2, transitionSpeed: 0.8, description: "That will shape the future." },
+      ]
+    },
+    {
+      id: 11,
+      imageUrl: "/comic/page-11.png",
+      title: "Young Sita",
+      focusPoints: [
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 0.5 },
+        { x: 30, y: 40, scale: 1.5, duration: 3, transitionSpeed: 1.2, description: "The challenge intensifies..." },
+        { x: 60, y: 60, scale: 2, duration: 3, transitionSpeed: 0.8 },
+        { x: 50, y: 80, scale: 1.5, duration: 2, transitionSpeed: 1.5, description: "Every choice has a cost." },
+      ]
+    },
+    {
+      id: 12,
+      imageUrl: "/comic/page-12.png",
+      title: "Young Sita",
+      focusPoints: [
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 0.3 },
+        { x: 20, y: 30, scale: 2, duration: 3, transitionSpeed: 2.0, description: "The story continues..." },
+        { x: 70, y: 50, scale: 1.5, duration: 3, transitionSpeed: 0.6 },
+        { x: 50, y: 70, scale: 2, duration: 2, transitionSpeed: 1.0, description: "With more to be revealed." },
       ]
     }
   ]
