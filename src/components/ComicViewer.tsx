@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button, Spinner, Tooltip } from '@heroui/react';
+import { Button, Loader, Tooltip, Box, Group, Center, Text } from '@mantine/core';
+import { IconPlayerPlayFilled, IconPlayerPauseFilled, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import useComicNavigation from '@/hooks/useComicNavigation';
 import { FocusPoint } from '@/utils/types';
 import { 
@@ -90,28 +91,25 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
   
   if (!currentPage) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
-        <Spinner size="lg" />
-      </div>
+      <Center h="100vh">
+        <Loader size="lg" />
+      </Center>
     );
   }
   
   return (
-    <div 
-      ref={containerRef} 
-      className="comic-viewer"
+    <Box 
+      ref={containerRef}
+      pos="relative"
+      w="100%"
+      h="100vh"
       style={{ 
-        position: 'relative', 
-        width: '100%', 
-        height: '100vh',
         overflow: 'hidden',
-        backgroundColor: 'var(--background)',
         touchAction: 'none', // Prevent default touch actions for better experience
       }}
     >
       {/* Image container with focus point animation */}
       <motion.div
-        className="image-container"
         style={{
           position: 'absolute',
           width: '100%',
@@ -134,7 +132,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
       >
         {/* Comic image with loading state */}
         {!imageLoaded && (
-          <div 
+          <Center
             style={{ 
               position: 'absolute',
               top: '50%',
@@ -143,8 +141,8 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               zIndex: 5 
             }}
           >
-            <Spinner size="lg" />
-          </div>
+            <Loader size="lg" />
+          </Center>
         )}
         
         <div
@@ -184,87 +182,74 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               transform: 'translateX(-50%)',
               maxWidth: '80%',
               padding: '10px 16px',
-              backgroundColor: 'var(--foreground)',
-              opacity: 0.7,
-              color: 'var(--background)',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              color: 'white',
               borderRadius: '8px',
               zIndex: 30,
               textAlign: 'center',
             }}
           >
-            {currentFocusPoint.description}
+            <Text>{currentFocusPoint.description}</Text>
           </motion.div>
         )}
       </AnimatePresence>
       
       {/* Navigation Controls */}
-      <div
+      <Group
+        justify="center"
+        gap="md"
         style={{
           position: 'absolute',
           bottom: '60px',
           left: 0,
           right: 0,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
           padding: '0 20px',
           zIndex: 20,
         }}
       >
         {/* Left navigation button */}
         <Button
-          isIconOnly
           aria-label="Previous"
           size="lg"
-          variant="shadow"
-          onPress={prevPoint}
-          isDisabled={!hasPrevPoint}
-          style={{ marginRight: '16px' }}
+          variant="subtle"
+          onClick={prevPoint}
+          disabled={!hasPrevPoint}
+          radius="xl"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
+          <IconChevronLeft size={24} />
         </Button>
         
         {/* Play/Pause button */}
         <Button
-          isIconOnly
           aria-label={isAutoPlaying ? "Pause" : "Play"}
           size="lg"
-          color="primary"
-          variant="shadow"
-          onPress={toggleAutoPlay}
+          variant="filled"
+          color="blue"
+          onClick={toggleAutoPlay}
+          radius="xl"
         >
           {isAutoPlaying ? (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="6" y="4" width="4" height="16" />
-              <rect x="14" y="4" width="4" height="16" />
-            </svg>
+            <IconPlayerPauseFilled size={24} />
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="5 3 19 12 5 21 5 3" />
-            </svg>
+            <IconPlayerPlayFilled size={24} />
           )}
         </Button>
         
         {/* Right navigation button */}
         <Button
-          isIconOnly
           aria-label="Next"
           size="lg"
-          variant="shadow"
-          onPress={nextPoint}
-          isDisabled={!hasNextPoint}
-          style={{ marginLeft: '16px' }}
+          variant="subtle"
+          onClick={nextPoint}
+          disabled={!hasNextPoint}
+          radius="xl"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 18l6-6-6-6" />
-          </svg>
+          <IconChevronRight size={24} />
         </Button>
-      </div>
+      </Group>
       
       {/* Timeline Slider - Enhanced to show all navigation points */}
-      <div
+      <Box
         style={{
           position: 'absolute',
           bottom: '20px',
@@ -274,7 +259,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
           zIndex: 20,
         }}
       >
-        <div 
+        <Box 
           style={{
             width: '100%',
             height: '30px',  // Increased height for more visual detail
@@ -284,7 +269,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
           }}
         >
           {/* Timeline track */}
-          <div 
+          <Box 
             style={{
               position: 'absolute',
               top: '50%',
@@ -292,8 +277,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               right: 0,
               height: '4px',
               transform: 'translateY(-50%)',
-              backgroundColor: 'var(--foreground)',
-              opacity: 0.2,
+              backgroundColor: 'rgba(200, 200, 200, 0.2)',
               borderRadius: '2px',
             }}
           />
@@ -310,16 +294,14 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               : pointInfo?.focusPoint.description || `Focus point ${index + 1}`;
             
             return (
-              <Tooltip key={`nav-point-${index}`} content={title}>
+              <Tooltip key={`nav-point-${index}`} label={title}>
                 <div
                   style={{
                     position: 'absolute',
                     left: `${(index / (totalNavigationPoints - 1)) * 100}%`,
                     width: isCurrentPoint ? '10px' : isPageStart ? '8px' : '6px',
                     height: isCurrentPoint ? '10px' : isPageStart ? '8px' : '6px',
-                    backgroundColor: index <= absoluteIndex 
-                      ? 'var(--foreground)' 
-                      : isPageStart ? 'var(--foreground)' : 'var(--foreground)',
+                    backgroundColor: 'white',
                     opacity: index <= absoluteIndex 
                       ? 1 
                       : isPageStart ? 0.8 : 0.5,
@@ -328,7 +310,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
                     transition: 'all 0.2s ease-in-out',
                     cursor: 'pointer',
                     zIndex: 2,
-                    border: isPageStart ? '2px solid var(--foreground)' : 'none',
+                    border: isPageStart ? '2px solid white' : 'none',
                   }}
                   onClick={() => navigateToAbsoluteIndex(index)}
                 />
@@ -350,17 +332,16 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
             return (
               <div
                 key={`page-marker-${page.id}`}
-                style={{
-                  position: 'absolute',
-                  bottom: '12px',
-                  left: `${position}%`,
-                  transform: 'translateX(-50%)',
-                  fontSize: '10px',
-                  color: 'var(--foreground)',
-                  opacity: 0.7,
-                  textAlign: 'center',
-                  pointerEvents: 'none',
-                }}
+              style={{
+                position: 'absolute',
+                bottom: '12px',
+                left: `${position}%`,
+                transform: 'translateX(-50%)',
+                fontSize: '10px',
+                opacity: 0.7,
+                textAlign: 'center',
+                pointerEvents: 'none',
+              }}
               >
                 {page.id}
               </div>
@@ -368,7 +349,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
           })}
           
           {/* Progress bar */}
-          <div
+          <Box
             style={{
               position: 'absolute',
               top: '50%',
@@ -376,33 +357,32 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               width: `${(absoluteIndex / (totalNavigationPoints - 1)) * 100}%`,
               height: '4px',
               transform: 'translateY(-50%)',
-              backgroundColor: 'var(--foreground)',
+              backgroundColor: 'white',
               borderRadius: '2px',
               transition: 'width 0.3s ease-in-out',
             }}
           />
-        </div>
-      </div>
+        </Box>
+      </Box>
       
       
       {/* Page Title */}
       {currentPage.title && (
-        <div
+        <Box
+          p="xs"
           style={{
             position: 'absolute',
             top: '20px',
             left: '50%',
             transform: 'translateX(-50%)',
             padding: '8px 16px',
-            backgroundColor: 'var(--foreground)',
-            opacity: 0.7,
-            color: 'var(--background)',
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
             borderRadius: '8px',
             zIndex: 20,
           }}
         >
-          {currentPage.title}
-        </div>
+          <Text color="white" fw={500}>{currentPage.title}</Text>
+        </Box>
       )}
       
       {/* Loading overlay */}
@@ -419,18 +399,17 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'var(--foreground)',
-              opacity: 0.7,
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               zIndex: 100,
             }}
           >
-            <Spinner size="lg" color="default" />
+            <Loader size="lg" />
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Box>
   );
 }

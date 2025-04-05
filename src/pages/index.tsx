@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Button, Card } from '@heroui/react';
+import { Button, Card, Container, Stack, Text, Group, Title } from '@mantine/core';
 import { motion } from 'framer-motion';
 
 export default function Home() {
@@ -31,70 +31,61 @@ export default function Home() {
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </Head>
       
-      <main style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        padding: '0 1rem',
-        background: 'var(--background)'
-      }}>
+      <Container 
+        h="100vh" 
+        display="flex" 
+        style={{ 
+          alignItems: 'center', 
+          justifyContent: 'center'
+        }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
           <Card 
-            style={{ 
-              maxWidth: '500px',
-              padding: '2rem',
-              backgroundColor: 'var(--background)',
-              border: '1px solid var(--foreground)',
-              textAlign: 'center'
-            }}
+            shadow="sm" 
+            p="xl" 
+            radius="md" 
+            withBorder 
+            maw={500}
+            ta="center"
           >
-            <h1 style={{
-              fontSize: '2rem',
-              fontWeight: 'bold',
-              color: 'var(--foreground)'
-            }}>
-              Immersive Comic Experience
-            </h1>
-            
-            <div style={{ margin: '2rem 0' }}></div>
-            
-            <p style={{ color: 'var(--foreground)', lineHeight: 1.6 }}>
-              Welcome to a revolutionary way to experience comics. Our guided viewing system
-              will lead you through each panel with cinematic transitions, creating an
-              immersive narrative flow unlike traditional comic reading.
-            </p>
-            
-            <div style={{ margin: '3rem 0' }}></div>
-            
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
-              <Button
-                color="primary"
-                size="lg"
-                isLoading={isLoading}
-                onPress={startReading}
-              >
-                Start Reading
-              </Button>
+            <Stack>
+              <Title order={1}>
+                Immersive Comic Experience
+              </Title>
               
-              <Button
-                as={Link}
-                href="/about"
-                variant="bordered"
-                size="lg"
-                onPress={() => {}}
-              >
-                Learn More
-              </Button>
-            </div>
+              <Text size="lg" mt="xl">
+                Welcome to a revolutionary way to experience comics. Our guided viewing system
+                will lead you through each panel with cinematic transitions, creating an
+                immersive narrative flow unlike traditional comic reading.
+              </Text>
+              
+              <Group justify="center" mt="xl" gap="md">
+                <Button
+                  color="blue"
+                  size="lg"
+                  loading={isLoading}
+                  onClick={startReading}
+                >
+                  Start Reading
+                </Button>
+                
+                <Button
+                  component={Link}
+                  href="/about"
+                  variant="outline"
+                  size="lg"
+                >
+                  Learn More
+                </Button>
+              </Group>
+            </Stack>
           </Card>
         </motion.div>
-      </main>
+      </Container>
     </>
   );
 }

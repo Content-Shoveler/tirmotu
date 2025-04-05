@@ -2,9 +2,9 @@ import { useRouter } from 'next/router';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
+import { Container, Stack, Title, Text, Group, Button } from '@mantine/core';
 import { comicData } from '@/data/comic-data';
 import ComicViewer from '@/components/ComicViewer';
-import { Button } from '@heroui/react';
 
 interface ComicPageProps {
   pageNumber: number;
@@ -47,39 +47,31 @@ const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection =
   // If it's the end page, display a special "End" message
   if (isEndPage) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column',
-        justifyContent: 'center', 
-        alignItems: 'center',
-        height: '100vh',
-        padding: '2rem',
-        textAlign: 'center',
-        background: 'var(--background)'
-      }}>
-        <h1 style={{ 
-          marginBottom: '2rem', 
-          fontSize: '3rem',
-          color: 'var(--foreground)'
-        }}>The End</h1>
-        <p style={{ 
-          marginBottom: '2rem', 
-          fontSize: '1.2rem',
-          maxWidth: '600px',
-          color: 'var(--foreground)'
-        }}>
-          Thank you for reading our comic. We hope you enjoyed the journey through Tirmotu!
-        </p>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <Button onClick={() => router.push('/')}>Return Home</Button>
-          <Button 
-            variant="bordered"
-            onClick={() => router.push(`/${comicData.pages[comicData.pages.length - 1].id}`)}
-          >
-            Previous Page
-          </Button>
-        </div>
-      </div>
+      <Container 
+        h="100vh" 
+        display="flex" 
+        style={{ 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          textAlign: 'center'
+        }}
+      >
+        <Stack align="center" gap="lg">
+          <Title order={1} size="h1" mb="md">The End</Title>
+          <Text size="lg" maw={600} mb="xl">
+            Thank you for reading our comic. We hope you enjoyed the journey through Tirmotu!
+          </Text>
+          <Group>
+            <Button onClick={() => router.push('/')}>Return Home</Button>
+            <Button 
+              variant="outline"
+              onClick={() => router.push(`/${comicData.pages[comicData.pages.length - 1].id}`)}
+            >
+              Previous Page
+            </Button>
+          </Group>
+        </Stack>
+      </Container>
     );
   }
   
@@ -87,20 +79,21 @@ const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection =
   if (!page && !router.isFallback) {
     console.error(`Page not found: ${pageNumber}`);
     return (
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column',
-        justifyContent: 'center', 
-        alignItems: 'center',
-        height: '100vh',
-        padding: '2rem',
-        textAlign: 'center',
-        background: 'var(--background)'
-      }}>
-        <h1 style={{ marginBottom: '2rem', color: 'var(--foreground)' }}>Page Not Found</h1>
-        <p style={{ marginBottom: '2rem', color: 'var(--foreground)' }}>Sorry, the comic page you&apos;re looking for doesn&apos;t exist.</p>
-        <Button onClick={() => router.push('/')}>Return Home</Button>
-      </div>
+      <Container 
+        h="100vh" 
+        display="flex" 
+        style={{ 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          textAlign: 'center'
+        }}
+      >
+        <Stack align="center" gap="lg">
+          <Title order={1} size="h1" mb="md">Page Not Found</Title>
+          <Text size="lg" mb="xl">Sorry, the comic page you&apos;re looking for doesn&apos;t exist.</Text>
+          <Button onClick={() => router.push('/')}>Return Home</Button>
+        </Stack>
+      </Container>
     );
   }
   

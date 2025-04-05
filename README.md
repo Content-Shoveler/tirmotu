@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tirmotu - Immersive Comic Viewer
+
+An interactive comic viewing experience with animated transitions, focus points, and immersive storytelling.
+
+## Features
+
+- Guided comic viewing experience with smooth transitions between focus points
+- Animated page transitions for a cinematic feel
+- Interactive timeline with visual markers for navigation
+- Auto-play functionality for hands-free viewing
+- Dark/light theme support
+- Fully responsive design
+
+## Technologies
+
+- **Next.js**: React framework for server-rendered applications
+- **Mantine UI**: Component library for building the interface
+- **Framer Motion**: Animation library for smooth transitions
+- **Tabler Icons**: Clean, consistent icon set
+
+## Architecture
+
+The application uses Next.js for server-side rendering and static site generation. Key components:
+
+- `ComicViewer`: Core component that displays comic pages and handles focus point transitions
+- `useComicNavigation`: Custom hook that manages navigation state and logic
+- `Slide Controls`: Interactive timeline slider for navigating between focus points
+- `Theme Management`: Light/dark theme support using Mantine's color scheme
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
+# Install dependencies
+yarn
+
+# Run development server
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+yarn build
+
+# Start production server
+yarn start
 ```
+
+## Data Structure
+
+Comic data is structured as follows:
+
+```typescript
+interface ComicData {
+  title: string;
+  description: string;
+  pages: ComicPage[];
+}
+
+interface ComicPage {
+  id: number;
+  imageUrl: string;
+  focusPoints: FocusPoint[];
+  title?: string;
+}
+
+interface FocusPoint {
+  x: number;        // Horizontal position (0-100%)
+  y: number;        // Vertical position (0-100%)
+  scale: number;    // Zoom level
+  duration: number; // Seconds to stay on this point
+  transitionSpeed?: number;
+  description?: string;
+}
+```
+
+## PWA Support
+
+The application includes Progressive Web App support, allowing it to be installed on mobile devices and used offline.
+
+## Development
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load the Geist font.

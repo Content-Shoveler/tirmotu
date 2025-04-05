@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
-import { Button } from '@heroui/react';
+import { ActionIcon, Tooltip } from '@mantine/core';
+import { IconSun, IconMoon } from '@tabler/icons-react';
 
-export default function ThemeToggle() {
+interface ThemeToggleProps {
+  toggleColorScheme: () => void;
+  colorScheme: 'light' | 'dark';
+}
+
+export default function ThemeToggle({ toggleColorScheme, colorScheme }: ThemeToggleProps) {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
 
-  // Wait for component to mount to access window/localStorage
+  // Wait for component to mount to avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -14,30 +18,19 @@ export default function ThemeToggle() {
   if (!mounted) return null;
 
   return (
-    <Button
-      isIconOnly
-      variant="ghost"
-      aria-label="Toggle theme"
-      title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-    >
-      {theme === 'dark' ? (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-      ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      )}
-    </Button>
+    <Tooltip label={colorScheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+      <ActionIcon
+        variant="subtle"
+        aria-label="Toggle theme"
+        onClick={toggleColorScheme}
+        size="lg"
+      >
+        {colorScheme === 'dark' ? (
+          <IconSun size={20} stroke={1.5} />
+        ) : (
+          <IconMoon size={20} stroke={1.5} />
+        )}
+      </ActionIcon>
+    </Tooltip>
   );
 }

@@ -1,16 +1,29 @@
 import type { AppProps } from 'next/app';
-import { ThemeProvider } from 'next-themes';
 import { useRouter } from 'next/router';
 import { AnimatePresence } from 'framer-motion';
-import Layout from '@/components/layout/Layout';
-import '@/styles/globals.css';
+import { MantineProvider, createTheme } from '@mantine/core';
 import { useState, useEffect } from 'react';
+import Layout from '@/components/layout/Layout';
+import '@mantine/core/styles.css';
+import '@/styles/globals.css';
 // Add debugging for route changes
+
+// Define Mantine theme
+const theme = createTheme({
+  // Default theme settings - can be customized later
+  colorScheme: 'dark',
+});
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const [navigationDirection, setNavigationDirection] = useState<"forward" | "backward">("forward");
   const [prevPath, setPrevPath] = useState<string>("");
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('dark');
+  
+  // Toggle color scheme
+  const toggleColorScheme = () => {
+    setColorScheme(current => current === 'dark' ? 'light' : 'dark');
+  };
   
   // Add router change event listeners for debugging
   useEffect(() => {
@@ -58,12 +71,11 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [router.asPath]);
 
   return (
-    <ThemeProvider 
-      attribute="class" 
-      defaultTheme="dark" 
-      enableSystem={false}
+    <MantineProvider
+      theme={{ ...theme, colorScheme }}
+      defaultColorScheme="dark"
     >
-      <Layout>
+      <Layout toggleColorScheme={toggleColorScheme} colorScheme={colorScheme}>
         <AnimatePresence
           mode="wait"
           initial={false}
@@ -77,6 +89,6 @@ export default function App({ Component, pageProps }: AppProps) {
           />
         </AnimatePresence>
       </Layout>
-    </ThemeProvider>
+    </MantineProvider>
   );
 }
