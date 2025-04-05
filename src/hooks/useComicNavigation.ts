@@ -62,7 +62,7 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
       const nextId = getNextPageId(currentPageId);
       if (nextId) {
         setIsLoading(true);
-        router.push(`/comic/${nextId}`);
+        router.push(`/${nextId}`);
       }
       return true;
     }
@@ -77,7 +77,7 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
       const prevId = getPrevPageId(currentPageId);
       if (prevId) {
         setIsLoading(true);
-        router.push(`/comic/${prevId}`);
+        router.push(`/${prevId}`);
       }
       return true;
     }
@@ -89,7 +89,7 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
       const nextId = getNextPageId(currentPageId);
       if (nextId) {
         setIsLoading(true);
-        router.push(`/comic/${nextId}`);
+        router.push(`/${nextId}`);
         return true;
       }
     }
@@ -101,7 +101,7 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
       const prevId = getPrevPageId(currentPageId);
       if (prevId) {
         setIsLoading(true);
-        router.push(`/comic/${prevId}`);
+        router.push(`/${prevId}`);
         return true;
       }
     }

@@ -11,7 +11,7 @@ export default function Home() {
 
   const startReading = () => {
     setIsLoading(true);
-    router.push('/comic/1');
+    router.push('/1');
   };
 
   return (

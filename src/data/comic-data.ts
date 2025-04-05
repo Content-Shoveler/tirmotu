@@ -153,14 +153,27 @@ export const getPageById = (id: number): ComicPage | undefined => {
 // Helper function to get the next page ID
 export const getNextPageId = (currentId: number): number | null => {
   const currentIndex = comicData.pages.findIndex(page => page.id === currentId);
-  if (currentIndex === -1 || currentIndex === comicData.pages.length - 1) {
+  
+  // If we're at the last comic page, return the end page (one number more than there are images)
+  if (currentIndex === comicData.pages.length - 1) {
+    return comicData.pages.length + 1; // This will be 13 with 12 comic pages
+  }
+  
+  // If we're at an invalid page or the end page itself, return null
+  if (currentIndex === -1 || currentId > comicData.pages.length) {
     return null;
   }
+  
   return comicData.pages[currentIndex + 1].id;
 };
 
 // Helper function to get the previous page ID
 export const getPrevPageId = (currentId: number): number | null => {
+  // If we're on the end page (one number more than there are images), return the last page
+  if (currentId === comicData.pages.length + 1) {
+    return comicData.pages[comicData.pages.length - 1].id;
+  }
+  
   const currentIndex = comicData.pages.findIndex(page => page.id === currentId);
   if (currentIndex <= 0) {
     return null;

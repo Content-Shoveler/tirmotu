@@ -41,7 +41,49 @@ const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection =
     }),
   };
   
-  // If the page is not found, return a 404-like page
+  // Check if this is the end page (one number more than there are comic pages)
+  const isEndPage = pageNumber === comicData.pages.length + 1;
+  
+  // If it's the end page, display a special "End" message
+  if (isEndPage) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column',
+        justifyContent: 'center', 
+        alignItems: 'center',
+        height: '100vh',
+        padding: '2rem',
+        textAlign: 'center',
+        background: 'var(--background)'
+      }}>
+        <h1 style={{ 
+          marginBottom: '2rem', 
+          fontSize: '3rem',
+          color: 'var(--foreground)'
+        }}>The End</h1>
+        <p style={{ 
+          marginBottom: '2rem', 
+          fontSize: '1.2rem',
+          maxWidth: '600px',
+          color: 'var(--foreground)'
+        }}>
+          Thank you for reading our comic. We hope you enjoyed the journey through Tirmotu!
+        </p>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <Button onClick={() => router.push('/')}>Return Home</Button>
+          <Button 
+            variant="bordered"
+            onClick={() => router.push(`/${comicData.pages[comicData.pages.length - 1].id}`)}
+          >
+            Previous Page
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  
+  // If the page is not found and it's not the end page, return a 404-like page
   if (!page && !router.isFallback) {
     return (
       <div style={{ 
@@ -87,6 +129,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const paths = comicData.pages.map(page => ({
     params: { pageNumber: page.id.toString() },
   }));
+  
+  // Add the end page (one number more than the number of comic pages)
+  paths.push({
+    params: { pageNumber: (comicData.pages.length + 1).toString() }
+  });
   
   return {
     paths,
