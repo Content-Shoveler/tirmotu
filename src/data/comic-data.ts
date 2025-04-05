@@ -10,11 +10,11 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-1.png",
       title: "The Game",
       focusPoints: [
-        { x: 50, y: 50, scale: 1.2, duration: 1.8, transitionSpeed: 2.3, description: "A world of intrigue and politics awaits..." },
-        { x: 25, y: 35, scale: 1.7, duration: 3.2, transitionSpeed: 3.2, description: "The hero begins their journey..." },
-        { x: 75, y: 45, scale: 2.3, duration: 2.5, transitionSpeed: 2.8, description: "Shadows lurk in every corner." },
-        { x: 40, y: 80, scale: 1.5, duration: 2.7, transitionSpeed: 3.5, description: "What lies ahead is unknown." },
-        { x: 65, y: 25, scale: 1.9, duration: 3.5, transitionSpeed: 2.5, description: "The first steps are always the hardest." },
+        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 2.3, description: "A world of intrigue and politics awaits..." },
+        { x: 50, y: -10, scale: 2.2, duration: 3.2, transitionSpeed: 3.2, description: "The hero begins their journey..." },
+        { x: 50, y: 50, scale: 2.5, duration: 2.5, transitionSpeed: 2.8, description: "Shadows lurk in every corner." },
+        { x: 50, y: 115, scale: 2.3, duration: 2.7, transitionSpeed: 3.5, description: "What lies ahead is unknown." },
+        { x: 50, y: 50, scale: 1, duration: 3.5, transitionSpeed: 2.5, description: "The first steps are always the hardest." },
       ]
     },
     {
@@ -22,10 +22,12 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-2.png",
       title: "The Game",
       focusPoints: [
-        { x: 45, y: 55, scale: 1.3, duration: 2.3, transitionSpeed: 2.6, description: "The tension builds in the air..." },
-        { x: 15, y: 25, scale: 2.4, duration: 4.0, transitionSpeed: 3.8, description: "A strange figure appears..." },
-        { x: 80, y: 60, scale: 1.6, duration: 2.8, transitionSpeed: 2.4, description: "Their intentions remain unclear." },
-        { x: 35, y: 75, scale: 2.2, duration: 3.2, transitionSpeed: 4.2, description: "They offer a mysterious object." },
+        { x: 50, y: 50, scale: 1, duration: 2.3, transitionSpeed: 2.6, description: "The tension builds in the air..." },
+        { x: 50, y: -15, scale: 2.4, duration: 4.0, transitionSpeed: 3.8, description: "A strange figure appears..." },
+        { x: 30, y: 50, scale: 2.6, duration: 2.8, transitionSpeed: 2.4, description: "Their intentions remain unclear." },
+        { x: 65, y: 50, scale: 2.3, duration: 3.2, transitionSpeed: 4.2, description: "They offer a mysterious object." },
+        { x: 50, y: 110, scale: 2, duration: 3.2, transitionSpeed: 4.2, description: "They offer a mysterious object." },
+        { x: 50, y: 50, scale: 1, duration: 2.3, transitionSpeed: 2.6, description: "The tension builds in the air..." },
       ]
     },
     {
@@ -33,12 +35,13 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-3.png",
       title: "The Game",
       focusPoints: [
-        { x: 55, y: 45, scale: 1.1, duration: 2.4, transitionSpeed: 2.9, description: "Time stands still in this moment..." },
-        { x: 25, y: 35, scale: 1.8, duration: 2.9, transitionSpeed: 3.6, description: "The hero must choose..." },
-        { x: 75, y: 30, scale: 1.4, duration: 3.8, transitionSpeed: 2.5, description: "Two paths diverge before them." },
-        { x: 40, y: 65, scale: 2.5, duration: 2.2, transitionSpeed: 4.0, description: "Each path has consequences." },
-        { x: 60, y: 85, scale: 2.0, duration: 3.4, transitionSpeed: 3.2, description: "The weight of decision hangs heavy." },
-        { x: 15, y: 50, scale: 1.6, duration: 2.8, transitionSpeed: 2.8, description: "There is no turning back now." },
+        { x: 50, y: 50, scale: 1, duration: 2.3, transitionSpeed: 2.6, description: "The tension builds in the air..." },
+        { x: 50, y: -15, scale: 2.4, duration: 4.0, transitionSpeed: 3.8, description: "A strange figure appears..." },
+        { x: 10, y: 50, scale: 2.8, duration: 2.8, transitionSpeed: 2.4, description: "Their intentions remain unclear." },
+        { x: 50, y: 50, scale: 2.4, duration: 4.0, transitionSpeed: 3.8, description: "A strange figure appears..." },
+        { x: 25, y: 130, scale: 2.8, duration: 2.8, transitionSpeed: 2.4, description: "Their intentions remain unclear." },
+        { x: 65, y: 127, scale: 2.6, duration: 2.8, transitionSpeed: 2.4, description: "Their intentions remain unclear." },
+        { x: 50, y: 50, scale: 1, duration: 2.3, transitionSpeed: 2.6, description: "The tension builds in the air..." },
       ]
     },
     {

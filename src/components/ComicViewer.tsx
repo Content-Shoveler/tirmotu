@@ -184,8 +184,9 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               transform: 'translateX(-50%)',
               maxWidth: '80%',
               padding: '10px 16px',
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              color: 'white',
+              backgroundColor: 'var(--foreground)',
+              opacity: 0.7,
+              color: 'var(--background)',
               borderRadius: '8px',
               zIndex: 30,
               textAlign: 'center',
@@ -291,7 +292,8 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               right: 0,
               height: '4px',
               transform: 'translateY(-50%)',
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              backgroundColor: 'var(--foreground)',
+              opacity: 0.2,
               borderRadius: '2px',
             }}
           />
@@ -316,14 +318,17 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
                     width: isCurrentPoint ? '10px' : isPageStart ? '8px' : '6px',
                     height: isCurrentPoint ? '10px' : isPageStart ? '8px' : '6px',
                     backgroundColor: index <= absoluteIndex 
-                      ? 'white' 
-                      : isPageStart ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.5)',
+                      ? 'var(--foreground)' 
+                      : isPageStart ? 'var(--foreground)' : 'var(--foreground)',
+                    opacity: index <= absoluteIndex 
+                      ? 1 
+                      : isPageStart ? 0.8 : 0.5,
                     borderRadius: '50%',
                     transform: 'translateX(-50%)',
                     transition: 'all 0.2s ease-in-out',
                     cursor: 'pointer',
                     zIndex: 2,
-                    border: isPageStart ? '2px solid white' : 'none',
+                    border: isPageStart ? '2px solid var(--foreground)' : 'none',
                   }}
                   onClick={() => navigateToAbsoluteIndex(index)}
                 />
@@ -351,7 +356,8 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
                   left: `${position}%`,
                   transform: 'translateX(-50%)',
                   fontSize: '10px',
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: 'var(--foreground)',
+                  opacity: 0.7,
                   textAlign: 'center',
                   pointerEvents: 'none',
                 }}
@@ -370,7 +376,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               width: `${(absoluteIndex / (totalNavigationPoints - 1)) * 100}%`,
               height: '4px',
               transform: 'translateY(-50%)',
-              backgroundColor: 'white',
+              backgroundColor: 'var(--foreground)',
               borderRadius: '2px',
               transition: 'width 0.3s ease-in-out',
             }}
@@ -388,8 +394,9 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
             left: '50%',
             transform: 'translateX(-50%)',
             padding: '8px 16px',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            color: 'white',
+            backgroundColor: 'var(--foreground)',
+            opacity: 0.7,
+            color: 'var(--background)',
             borderRadius: '8px',
             zIndex: 20,
           }}
@@ -412,14 +419,15 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              backgroundColor: 'var(--foreground)',
+              opacity: 0.7,
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               zIndex: 100,
             }}
           >
-            <Spinner size="lg" color="white" />
+            <Spinner size="lg" color="default" />
           </motion.div>
         )}
       </AnimatePresence>
