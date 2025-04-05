@@ -1,6 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { getPageById, getNextPageId, getPrevPageId } from '@/data/comic-data';
+import { 
+  getPageById, 
+  getNextPageId, 
+  getPrevPageId,
+  getAbsoluteIndexFromPageAndFocusPoint,
+  getPageAndFocusPointFromAbsoluteIndex,
+  getTotalNavigationPoints
+} from '@/data/comic-data';
 import { FocusPoint } from '@/utils/types';
 
 export interface ComicNavigationState {
@@ -8,20 +15,23 @@ export interface ComicNavigationState {
   currentFocusPointIndex: number;
   focusPoints: FocusPoint[];
   isAutoPlaying: boolean;
-  hasNextFocusPoint: boolean;
-  hasPrevFocusPoint: boolean;
+  hasNextPoint: boolean;
+  hasPrevPoint: boolean;
   hasNextPage: boolean;
   hasPrevPage: boolean;
   currentFocusPoint: FocusPoint | null;
   isLoading: boolean;
+  absoluteIndex: number;
+  totalNavigationPoints: number;
 }
 
 export interface ComicNavigationActions {
-  nextFocusPoint: () => void;
-  prevFocusPoint: () => void;
-  nextPage: () => void;
-  prevPage: () => void;
-  goToFocusPoint: (index: number) => void;
+  nextPoint: () => boolean;
+  prevPoint: () => boolean;
+  nextPage: () => boolean;
+  prevPage: () => boolean;
+  goToFocusPoint: (index: number) => boolean;
+  navigateToAbsoluteIndex: (index: number) => boolean;
   toggleAutoPlay: () => void;
 }
 
@@ -29,6 +39,9 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
   const router = useRouter();
   const [currentPageId, setCurrentPageId] = useState<number>(initialPageId);
   const [currentFocusPointIndex, setCurrentFocusPointIndex] = useState<number>(0);
+  const [absoluteIndex, setAbsoluteIndex] = useState<number>(() => {
+    return getAbsoluteIndexFromPageAndFocusPoint(initialPageId, 0);
+  });
   
   // Parse URL hash to get focus point index
   const getFocusPointFromHash = useCallback(() => {
@@ -82,49 +95,53 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
   const currentPage = getPageById(currentPageId);
   const focusPoints = currentPage?.focusPoints || [];
   
-  // Check navigation availability
-  const hasNextFocusPoint = currentFocusPointIndex < focusPoints.length - 1;
-  const hasPrevFocusPoint = currentFocusPointIndex > 0;
+  // Update absolute index when page or focus point changes
+  useEffect(() => {
+    const newAbsoluteIndex = getAbsoluteIndexFromPageAndFocusPoint(
+      currentPageId, 
+      currentFocusPointIndex
+    );
+    if (newAbsoluteIndex !== -1) {
+      setAbsoluteIndex(newAbsoluteIndex);
+    }
+  }, [currentPageId, currentFocusPointIndex]);
+  
+  // Calculate navigation availability
+  const totalPoints = getTotalNavigationPoints();
+  const hasNextPoint = absoluteIndex < totalPoints - 1;
+  const hasPrevPoint = absoluteIndex > 0;
   const hasNextPage = getNextPageId(currentPageId) !== null;
   const hasPrevPage = getPrevPageId(currentPageId) !== null;
   
   // Get current focus point
   const currentFocusPoint = focusPoints[currentFocusPointIndex] || null;
   
-  // Navigation actions
-  const nextFocusPoint = useCallback(() => {
-    if (hasNextFocusPoint) {
-      const newIndex = currentFocusPointIndex + 1;
-      setCurrentFocusPointIndex(newIndex);
-      updateUrlHash(newIndex);
+  // Navigation based on absolute index
+  const navigateToAbsoluteIndex = useCallback((newAbsoluteIndex: number) => {
+    if (newAbsoluteIndex < 0 || newAbsoluteIndex >= totalPoints) return false;
+    
+    const result = getPageAndFocusPointFromAbsoluteIndex(newAbsoluteIndex);
+    if (!result) return false;
+    
+    if (result.pageId !== currentPageId) {
+      setIsLoading(true);
+      router.push(`/${result.pageId}#${result.focusPointIndex}`);
       return true;
-    } else if (hasNextPage) {
-      const nextId = getNextPageId(currentPageId);
-      if (nextId) {
-        setIsLoading(true);
-        router.push(`/${nextId}`);
-      }
+    } else {
+      setCurrentFocusPointIndex(result.focusPointIndex);
+      updateUrlHash(result.focusPointIndex);
       return true;
     }
-    return false;
-  }, [currentFocusPointIndex, hasNextFocusPoint, hasNextPage, currentPageId, router, updateUrlHash]);
+  }, [currentPageId, router, updateUrlHash, totalPoints]);
   
-  const prevFocusPoint = useCallback(() => {
-    if (hasPrevFocusPoint) {
-      const newIndex = currentFocusPointIndex - 1;
-      setCurrentFocusPointIndex(newIndex);
-      updateUrlHash(newIndex);
-      return true;
-    } else if (hasPrevPage) {
-      const prevId = getPrevPageId(currentPageId);
-      if (prevId) {
-        setIsLoading(true);
-        router.push(`/${prevId}`);
-      }
-      return true;
-    }
-    return false;
-  }, [currentFocusPointIndex, hasPrevFocusPoint, hasPrevPage, currentPageId, router, updateUrlHash]);
+  // Update navigation methods to use absolute index
+  const nextPoint = useCallback(() => {
+    return navigateToAbsoluteIndex(absoluteIndex + 1);
+  }, [absoluteIndex, navigateToAbsoluteIndex]);
+  
+  const prevPoint = useCallback(() => {
+    return navigateToAbsoluteIndex(absoluteIndex - 1);
+  }, [absoluteIndex, navigateToAbsoluteIndex]);
   
   const nextPage = useCallback(() => {
     if (hasNextPage) {
@@ -168,27 +185,27 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
     }
   }, [isAutoPlaying]);
   
-  // Auto-play effect
+  // Auto-play effect - updated to use nextPoint
   useEffect(() => {
     let timer: NodeJS.Timeout;
     
     if (isAutoPlaying && currentFocusPoint) {
       timer = setTimeout(() => {
-        const success = nextFocusPoint();
-      if (!success) {
-        setIsAutoPlaying(false);
-        // Also update localStorage when autoplay stops automatically
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('comic-autoplay', 'false');
+        const success = nextPoint();
+        if (!success) {
+          setIsAutoPlaying(false);
+          // Also update localStorage when autoplay stops automatically
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('comic-autoplay', 'false');
+          }
         }
-      }
       }, currentFocusPoint.duration * 1000);
     }
     
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [isAutoPlaying, currentFocusPoint, nextFocusPoint]);
+  }, [isAutoPlaying, currentFocusPoint, nextPoint]);
   
   // Sync with URL parameter when page changes (without modifying focus point)
   useEffect(() => {
@@ -237,13 +254,13 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
     }
   }, [currentFocusPointIndex, router.isReady, isLoading, updateUrlHash, getFocusPointFromHash]);
   
-  // Key navigation
+  // Key navigation - updated to use nextPoint/prevPoint
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight' || e.key === ' ') {
-        nextFocusPoint();
+        nextPoint();
       } else if (e.key === 'ArrowLeft') {
-        prevFocusPoint();
+        prevPoint();
       } else if (e.key === 'ArrowUp') {
         prevPage();
       } else if (e.key === 'ArrowDown') {
@@ -257,7 +274,7 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [nextFocusPoint, prevFocusPoint, nextPage, prevPage, toggleAutoPlay]);
+  }, [nextPoint, prevPoint, nextPage, prevPage, toggleAutoPlay]);
   
   return [
     {
@@ -265,19 +282,22 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
       currentFocusPointIndex,
       focusPoints,
       isAutoPlaying,
-      hasNextFocusPoint,
-      hasPrevFocusPoint,
+      hasNextPoint,
+      hasPrevPoint,
       hasNextPage,
       hasPrevPage,
       currentFocusPoint,
-      isLoading
+      isLoading,
+      absoluteIndex,
+      totalNavigationPoints: totalPoints
     },
     {
-      nextFocusPoint,
-      prevFocusPoint,
+      nextPoint,
+      prevPoint,
       nextPage,
       prevPage,
       goToFocusPoint,
+      navigateToAbsoluteIndex,
       toggleAutoPlay
     }
   ];

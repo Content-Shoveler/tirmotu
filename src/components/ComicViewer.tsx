@@ -1,10 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button, Spinner } from '@heroui/react';
+import { Button, Spinner, Tooltip } from '@heroui/react';
 import useComicNavigation from '@/hooks/useComicNavigation';
 import { FocusPoint } from '@/utils/types';
-import { getPageById } from '@/data/comic-data';
+import { 
+  getPageById, 
+  getFocusPointByAbsoluteIndex, 
+  comicData,
+  getAbsoluteIndexFromPageAndFocusPoint 
+} from '@/data/comic-data';
 
 interface ComicViewerProps {
   pageId: number;
@@ -15,26 +20,22 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [viewportDimensions, setViewportDimensions] = useState({ width: 0, height: 0 });
   
-  // Get comic navigation state and actions
+  // Get comic navigation state and actions - destructure only what we need
   const [
     {
       currentPageId,
-      currentFocusPointIndex,
-      focusPoints,
       isAutoPlaying,
-      hasNextFocusPoint,
-      hasPrevFocusPoint,
-      hasNextPage,
-      hasPrevPage,
+      hasNextPoint,
+      hasPrevPoint,
       currentFocusPoint,
-      isLoading
+      isLoading,
+      absoluteIndex,
+      totalNavigationPoints
     },
     {
-      nextFocusPoint,
-      prevFocusPoint,
-      nextPage,
-      prevPage,
-      goToFocusPoint,
+      nextPoint,
+      prevPoint,
+      navigateToAbsoluteIndex,
       toggleAutoPlay
     }
   ] = useComicNavigation(pageId);
@@ -215,8 +216,8 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
           aria-label="Previous"
           size="lg"
           variant="shadow"
-          onPress={prevFocusPoint}
-          isDisabled={!hasPrevFocusPoint && !hasPrevPage}
+          onPress={prevPoint}
+          isDisabled={!hasPrevPoint}
           style={{ marginRight: '16px' }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -251,8 +252,8 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
           aria-label="Next"
           size="lg"
           variant="shadow"
-          onPress={nextFocusPoint}
-          isDisabled={!hasNextFocusPoint && !hasNextPage}
+          onPress={nextPoint}
+          isDisabled={!hasNextPoint}
           style={{ marginLeft: '16px' }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -261,7 +262,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
         </Button>
       </div>
       
-      {/* Timeline Slider */}
+      {/* Timeline Slider - Enhanced to show all navigation points */}
       <div
         style={{
           position: 'absolute',
@@ -275,7 +276,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
         <div 
           style={{
             width: '100%',
-            height: '20px',
+            height: '30px',  // Increased height for more visual detail
             position: 'relative',
             display: 'flex',
             alignItems: 'center',
@@ -295,25 +296,70 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
             }}
           />
           
-          {/* Focus points */}
-          {focusPoints.map((_, index) => (
-            <div
-              key={`focus-${index}`}
-              style={{
-                position: 'absolute',
-                left: `${(index / (focusPoints.length - 1)) * 100}%`,
-                width: index === currentFocusPointIndex ? '10px' : '6px',
-                height: index === currentFocusPointIndex ? '10px' : '6px',
-                backgroundColor: index <= currentFocusPointIndex ? 'white' : 'rgba(255, 255, 255, 0.5)',
-                borderRadius: '50%',
-                transform: 'translateX(-50%)',
-                transition: 'all 0.2s ease-in-out',
-                cursor: 'pointer',
-                zIndex: 2,
-              }}
-              onClick={() => goToFocusPoint(index)}
-            />
-          ))}
+          {/* Generate markers for all pages and focus points */}
+          {Array.from({ length: totalNavigationPoints }).map((_, index) => {
+            const pointInfo = getFocusPointByAbsoluteIndex(index);
+            const isCurrentPoint = index === absoluteIndex;
+            const isPageStart = pointInfo?.focusPoint && 
+                             pointInfo.page.focusPoints.indexOf(pointInfo.focusPoint) === 0;
+            
+            const title = isPageStart 
+              ? `Page ${pointInfo?.page.id}: ${pointInfo?.page.title || ''}`
+              : pointInfo?.focusPoint.description || `Focus point ${index + 1}`;
+            
+            return (
+              <Tooltip key={`nav-point-${index}`} content={title}>
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: `${(index / (totalNavigationPoints - 1)) * 100}%`,
+                    width: isCurrentPoint ? '10px' : isPageStart ? '8px' : '6px',
+                    height: isCurrentPoint ? '10px' : isPageStart ? '8px' : '6px',
+                    backgroundColor: index <= absoluteIndex 
+                      ? 'white' 
+                      : isPageStart ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.5)',
+                    borderRadius: '50%',
+                    transform: 'translateX(-50%)',
+                    transition: 'all 0.2s ease-in-out',
+                    cursor: 'pointer',
+                    zIndex: 2,
+                    border: isPageStart ? '2px solid white' : 'none',
+                  }}
+                  onClick={() => navigateToAbsoluteIndex(index)}
+                />
+              </Tooltip>
+            );
+          })}
+          
+          {/* Page markers */}
+          {comicData.pages.map((page) => {
+            // Find the absolute index for the first focus point of this page
+            const pageStartIndex = page.focusPoints.length > 0 
+              ? getAbsoluteIndexFromPageAndFocusPoint(page.id, 0)
+              : -1;
+              
+            if (pageStartIndex === -1) return null;
+            
+            const position = (pageStartIndex / (totalNavigationPoints - 1)) * 100;
+            
+            return (
+              <div
+                key={`page-marker-${page.id}`}
+                style={{
+                  position: 'absolute',
+                  bottom: '12px',
+                  left: `${position}%`,
+                  transform: 'translateX(-50%)',
+                  fontSize: '10px',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  textAlign: 'center',
+                  pointerEvents: 'none',
+                }}
+              >
+                {page.id}
+              </div>
+            );
+          })}
           
           {/* Progress bar */}
           <div
@@ -321,7 +367,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               position: 'absolute',
               top: '50%',
               left: 0,
-              width: `${(currentFocusPointIndex / (focusPoints.length - 1)) * 100}%`,
+              width: `${(absoluteIndex / (totalNavigationPoints - 1)) * 100}%`,
               height: '4px',
               transform: 'translateY(-50%)',
               backgroundColor: 'white',
@@ -332,56 +378,6 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
         </div>
       </div>
       
-      {/* Page Navigation Buttons */}
-      <div style={{
-        position: 'absolute',
-        top: '50%',
-        left: '16px',
-        transform: 'translateY(-50%)',
-        zIndex: 20,
-      }}>
-        <Button
-          isIconOnly
-          aria-label="Previous Page"
-          size="lg"
-          variant="ghost"
-          onPress={prevPage}
-          isDisabled={!hasPrevPage}
-          style={{ 
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            margin: '10px 0'
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M19 12H5M12 5l-7 7 7 7" />
-          </svg>
-        </Button>
-      </div>
-      
-      <div style={{
-        position: 'absolute',
-        top: '50%',
-        right: '16px',
-        transform: 'translateY(-50%)',
-        zIndex: 20,
-      }}>
-        <Button
-          isIconOnly
-          aria-label="Next Page"
-          size="lg"
-          variant="ghost"
-          onPress={nextPage}
-          isDisabled={!hasNextPage}
-          style={{ 
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            margin: '10px 0'
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </Button>
-      </div>
       
       {/* Page Title */}
       {currentPage.title && (

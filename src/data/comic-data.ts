@@ -1,4 +1,4 @@
-import { ComicData, ComicPage } from '@/utils/types';
+import { ComicData, ComicPage, FocusPoint } from '@/utils/types';
 
 // Comic data using real images
 export const comicData: ComicData = {
@@ -143,6 +143,61 @@ export const comicData: ComicData = {
 // Helper function to get total number of focus points across all pages
 export const getTotalFocusPoints = (): number => {
   return comicData.pages.reduce((total, page) => total + page.focusPoints.length, 0);
+};
+
+// Helper function to get total number of navigation points (all focus points across all pages)
+export const getTotalNavigationPoints = (): number => {
+  return comicData.pages.reduce((total, page) => total + page.focusPoints.length, 0);
+};
+
+// Convert absolute index to page and focus point indices
+export const getPageAndFocusPointFromAbsoluteIndex = (absoluteIndex: number): 
+  { pageId: number; focusPointIndex: number } | null => {
+  let currentIndex = 0;
+  
+  for (const page of comicData.pages) {
+    if (absoluteIndex < currentIndex + page.focusPoints.length) {
+      return {
+        pageId: page.id,
+        focusPointIndex: absoluteIndex - currentIndex
+      };
+    }
+    currentIndex += page.focusPoints.length;
+  }
+  
+  return null; // Out of bounds
+};
+
+// Get absolute index from page id and focus point index
+export const getAbsoluteIndexFromPageAndFocusPoint = (
+  pageId: number, 
+  focusPointIndex: number
+): number => {
+  let absoluteIndex = 0;
+  
+  for (const page of comicData.pages) {
+    if (page.id === pageId) {
+      return absoluteIndex + focusPointIndex;
+    }
+    absoluteIndex += page.focusPoints.length;
+  }
+  
+  return -1; // Not found
+};
+
+// Get focus point by absolute index
+export const getFocusPointByAbsoluteIndex = (absoluteIndex: number): 
+  { page: ComicPage; focusPoint: FocusPoint } | null => {
+  const result = getPageAndFocusPointFromAbsoluteIndex(absoluteIndex);
+  if (!result) return null;
+  
+  const page = getPageById(result.pageId);
+  if (!page) return null;
+  
+  return {
+    page,
+    focusPoint: page.focusPoints[result.focusPointIndex]
+  };
 };
 
 // Helper function to get a page by its ID
