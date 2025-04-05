@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
@@ -9,52 +8,35 @@ import { Button } from '@heroui/react';
 
 interface ComicPageProps {
   pageNumber: number;
+  navigationDirection?: "forward" | "backward";
 }
 
-const ComicPage: NextPage<ComicPageProps> = ({ pageNumber }) => {
+const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection = "forward" }) => {
   const router = useRouter();
-  const [exitDirection, setExitDirection] = useState<'left' | 'right'>('left');
-  
-  // Handle navigation direction for exit animations
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      const newPageMatch = url.match(/\/comic\/(\d+)/);
-      if (newPageMatch) {
-        const newPage = parseInt(newPageMatch[1], 10);
-        setExitDirection(newPage > pageNumber ? 'left' : 'right');
-      }
-    };
-    
-    router.events.on('routeChangeStart', handleRouteChange);
-    
-    return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
-    };
-  }, [router.events, pageNumber]);
   
   // Get the current page data
   const page = comicData.pages.find(p => p.id === pageNumber);
   
   // Variants for page transitions
   const variants = {
-    initial: (direction: 'left' | 'right') => ({
-      x: direction === 'right' ? '100%' : '-100%',
+    initial: (direction: "forward" | "backward") => ({
+      x: direction === "forward" ? "100%" : "-100%",
       opacity: 0,
     }),
     animate: {
       x: 0,
       opacity: 1,
       transition: {
-        x: { type: 'spring', stiffness: 300, damping: 30 },
-        opacity: { duration: 0.2 },
+        x: { type: 'spring', stiffness: 120, damping: 45 },
+        opacity: { duration: 0.4 },
       },
     },
-    exit: (direction: 'left' | 'right') => ({
-      x: direction === 'left' ? '-100%' : '100%',
+    exit: (direction: "forward" | "backward") => ({
+      x: direction === "forward" ? "-100%" : "100%",
       opacity: 0,
       transition: {
-        x: { type: 'spring', stiffness: 300, damping: 30 },
-        opacity: { duration: 0.2 },
+        x: { type: 'spring', stiffness: 120, damping: 45 },
+        opacity: { duration: 0.4 },
       },
     }),
   };
@@ -87,7 +69,7 @@ const ComicPage: NextPage<ComicPageProps> = ({ pageNumber }) => {
       </Head>
       
       <motion.div
-        custom={exitDirection}
+        custom={navigationDirection}
         initial="initial"
         animate="animate"
         exit="exit"
