@@ -58,21 +58,5 @@
     }
   ],
   "splash_pages": null,
-  "prefer_related_applications": false,
-  "shortcuts": [
-    {
-      "name": "Home",
-      "short_name": "Home",
-      "description": "Go to the home page",
-      "url": "/",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Latest Comic",
-      "short_name": "Latest",
-      "description": "View the latest comic",
-      "url": "/comic/1",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
-    }
-  ]
+  "prefer_related_applications": false
 }
