@@ -159,7 +159,11 @@ const FocusPointAnimation = ({
   return (
     <>
       <motion.div
-        className="absolute inset-0 pointer-events-none"
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none"
+        }}
         animate={controls}
         initial={calculateTransform(focusPoints[0])}
       />
@@ -167,7 +171,20 @@ const FocusPointAnimation = ({
       <AnimatePresence>
         {captionVisible && currentCaption && (
           <motion.div
-            className="absolute bottom-16 left-0 right-0 mx-auto max-w-xl bg-black/70 text-white p-3 rounded-md text-center"
+            style={{
+              position: "absolute",
+              bottom: "4rem",
+              left: 0,
+              right: 0,
+              marginLeft: "auto",
+              marginRight: "auto",
+              maxWidth: "36rem",
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              color: "white",
+              padding: "0.75rem",
+              borderRadius: "0.375rem",
+              textAlign: "center"
+            }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
