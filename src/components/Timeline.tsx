@@ -76,35 +76,30 @@ export default function Timeline({
       thumbSize={getThumbSize(absoluteIndex)}
       styles={() => ({
         root: {
-          paddingBottom: '15px',
           width: '100%',
+          marginBottom: 10,
         },
         track: {
           backgroundColor: isDark ? 'rgba(200, 200, 200, 0.2)' : 'rgba(0, 0, 0, 0.1)',
-          height: 4,
         },
         bar: {
           backgroundColor: isDark ? 'white' : 'black',
-          height: 4,
         },
         thumb: {
           backgroundColor: isDark ? 'white' : 'black',
-          borderWidth: 0,
         },
         mark: {
-          width: 8,
-          height: 8,
-          backgroundColor: isDark ? 'white' : 'black',
-          opacity: 0.8,
-          transform: 'translateX(-50%) translateY(-50%)',
-        },
-        markFilled: {
-          opacity: 1,
+          backgroundColor: isDark ? 'white' : 'gray',
+          width: '20px',
+          height: '20px',
+          marginTop: '-6px',
+          marginLeft: '-6px',
         },
         markLabel: {
           fontSize: 10,
-          marginTop: 5,
           color: isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+          marginTop: -4,
+          marginLeft: 2.5,
         }
       })}
     />

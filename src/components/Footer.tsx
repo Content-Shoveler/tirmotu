@@ -23,7 +23,7 @@ export default function Footer({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '0 20px',
+        padding: '0 75px',
         borderTop: '1px solid',
         borderColor: colorScheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
       }}
