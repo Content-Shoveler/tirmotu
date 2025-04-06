@@ -5,6 +5,11 @@ import { useRouter } from 'next/router';
 import { Button, Card, Container, Stack, Text, Group, Title } from '@mantine/core';
 import { motion } from 'framer-motion';
 import { ComicNavigationState } from '@/components/ComicViewer';
+import { 
+  comicData, 
+  getPageAndFocusPointFromAbsoluteIndex
+} from '@/data/comic-data';
+import { ComicPage } from '@/utils/types';
 
 interface HomeProps {
   updateAppNavigationState?: (state: ComicNavigationState) => void;
@@ -25,28 +30,77 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
     }
   }, [router]);
   
+  // Track auto-play state
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
+  
+  // Function to toggle auto-play
+  const toggleAutoPlay = useCallback(() => {
+    setIsAutoPlaying(prevState => !prevState);
+    // If turning on auto-play, start the reading process
+    if (!isAutoPlaying) {
+      startReading();
+    }
+  }, [isAutoPlaying, startReading]);
+  
+  // Function to navigate to a specific index on the timeline
+  const navigateToAbsoluteIndex = useCallback((index: number) => {
+    console.log(`Home: Navigating to absolute index ${index}`);
+    
+    // If index is 0, we stay on the home page
+    if (index === 0) {
+      return true;
+    }
+    
+    // Get the total number of focus points from the comic data
+    const totalFocusPoints = comicData.pages.reduce(
+      (total: number, page: ComicPage) => total + page.focusPoints.length, 0
+    );
+    
+    // If it's the last index (end page), navigate to the end page
+    if (index === totalFocusPoints + 1) { // +1 to account for home page at index 0
+      router.push(`/${comicData.pages.length + 1}`);
+      return true;
+    }
+    
+    // For other indices, determine the corresponding page and focus point
+    const pageAndPoint = getPageAndFocusPointFromAbsoluteIndex(index - 1); // -1 to adjust for home page at index 0
+    
+    if (pageAndPoint) {
+      router.push(`/${pageAndPoint.pageId}`);
+      return true;
+    }
+    
+    return false;
+  }, [router]);
+  
   // Create a simplified navigation state for the home page
   useEffect(() => {
     if (updateAppNavigationState) {
+      // Get the total focus points in the comic
+      const totalFocusPoints = comicData.pages.reduce(
+        (total: number, page: ComicPage) => total + page.focusPoints.length, 0
+      );
+      
       const navigationState = {
         currentPageId: 0,
-        isAutoPlaying: false,
+        isAutoPlaying: isAutoPlaying,
         hasNextPoint: true,
         hasPrevPoint: false,
         currentFocusPoint: null,
         isLoading: false,
         absoluteIndex: 0,
-        totalNavigationPoints: 100,
+        // Add 2 to account for home page (index 0) and end page (at the end)
+        totalNavigationPoints: totalFocusPoints + 2, 
         title: 'Immersive Comic Experience',
         nextPoint: startReading,
         prevPoint: () => false,
-        navigateToAbsoluteIndex: () => false,
-        toggleAutoPlay: () => {}
+        navigateToAbsoluteIndex: navigateToAbsoluteIndex,
+        toggleAutoPlay: toggleAutoPlay
       };
       
       updateAppNavigationState(navigationState);
     }
-  }, [updateAppNavigationState, startReading]);
+  }, [updateAppNavigationState, startReading, navigateToAbsoluteIndex, toggleAutoPlay, isAutoPlaying]);
 
   return (
     <>

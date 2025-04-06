@@ -21,23 +21,43 @@ export default function Timeline({
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
   
-  // Generate marks for all pages
-  const marks = comicData.pages.map(page => {
-    // Find the absolute index for the first focus point of this page
-    const pageStartIndex = page.focusPoints.length > 0 
-      ? getAbsoluteIndexFromPageAndFocusPoint(page.id, 0)
-      : -1;
+  // Generate comic page marks (filtering out nulls first to avoid TypeScript errors)
+  const pageMarks = comicData.pages
+    .map(page => {
+      // Find the absolute index for the first focus point of this page
+      const pageStartIndex = page.focusPoints.length > 0 
+        ? getAbsoluteIndexFromPageAndFocusPoint(page.id, 0)
+        : -1;
+        
+      if (pageStartIndex === -1) return null;
       
-    if (pageStartIndex === -1) return null;
+      return {
+        value: pageStartIndex,
+        label: `${page.id}`
+      };
+    })
+    .filter((mark): mark is { value: number; label: string } => mark !== null);
+  
+  // Generate marks for homepage, all comic pages, and end page
+  const marks: SliderProps['marks'] = [
+    // Homepage mark (absoluteIndex = 0)
+    { value: 0, label: 'Home' },
     
-    return {
-      value: pageStartIndex,
-      label: `${page.id}`
-    };
-  }).filter(Boolean) as SliderProps['marks'];
+    // Add filtered comic page marks
+    ...pageMarks,
+    
+    // End page mark (set to totalNavigationPoints - 1)
+    { value: totalNavigationPoints - 1, label: 'End' }
+  ];
   
   // Get label content based on focus point info
   const getLabel = (value: number) => {
+    // Special case for homepage
+    if (value === 0) return "Home";
+    
+    // Special case for end page
+    if (value === totalNavigationPoints - 1) return "The End";
+    
     const pointInfo = getFocusPointByAbsoluteIndex(value);
     if (!pointInfo) return `Point ${value + 1}`;
     
@@ -50,6 +70,9 @@ export default function Timeline({
   
   // Function to determine thumb size based on if it's a page start point
   const getThumbSize = (value: number) => {
+    // Special cases for homepage and end page
+    if (value === 0 || value === totalNavigationPoints - 1) return 16;
+    
     const pointInfo = getFocusPointByAbsoluteIndex(value);
     if (!pointInfo) return 10;
     
