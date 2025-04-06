@@ -108,33 +108,6 @@ export default function Viewer({
         </motion.div>
       </AnimatePresence>
       
-      {/* Caption overlay */}
-      <AnimatePresence>
-        {currentFocusPoint?.description && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              maxWidth: '80%',
-              padding: '10px 16px',
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              color: 'white',
-              borderRadius: '8px',
-              zIndex: 30,
-              textAlign: 'center',
-            }}
-          >
-            {currentFocusPoint.description}
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
       {/* Loading overlay */}
       <Loading isLoading={isLoading} />
     </Box>

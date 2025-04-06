@@ -10,12 +10,12 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-1.png",
       title: "The Game",
       focusPoints: [
-        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 2.3, description: "A world of intrigue and politics awaits..." },
-        { x: 30, y: -35, scale: 3, duration: 3.2, transitionSpeed: 3.2, description: "The hero begins their journey..." },
-        { x: 75, y: -50, scale: 3.5, duration: 3.2, transitionSpeed: 10, description: "The hero begins their journey..." },
-        { x: 50, y: 50, scale: 2.5, duration: 2.5, transitionSpeed: 2.8, description: "Shadows lurk in every corner." },
-        { x: 50, y: 135, scale: 3, duration: 2.7, transitionSpeed: 3.5, description: "What lies ahead is unknown." },
-        { x: 50, y: 50, scale: 1, duration: 3.5, transitionSpeed: 2.5, description: "The first steps are always the hardest." },
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 3, description: "A world of intrigue and politics awaits..." },
+        { x: 30, y: -35, scale: 3, duration: 7, transitionSpeed: 3, description: "The hero begins their journey..." },
+        { x: 75, y: -50, scale: 3.5, duration: 6, transitionSpeed: 10, description: "The hero begins their journey..." },
+        { x: 50, y: 50, scale: 2.5, duration: 6, transitionSpeed: 3, description: "Shadows lurk in every corner." },
+        { x: 50, y: 135, scale: 3, duration: 6, transitionSpeed: 4, description: "What lies ahead is unknown." },
+        { x: 50, y: 50, scale: 1, duration: 3, transitionSpeed: 3, description: "The first steps are always the hardest." },
       ]
     },
     {
@@ -23,12 +23,13 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-2.png",
       title: "The Game",
       focusPoints: [
-        { x: 50, y: 50, scale: 1, duration: 2.3, transitionSpeed: 2.6, description: "The tension builds in the air..." },
-        { x: 50, y: -15, scale: 2.4, duration: 4.0, transitionSpeed: 3.8, description: "A strange figure appears..." },
-        { x: 30, y: 50, scale: 2.6, duration: 2.8, transitionSpeed: 2.4, description: "Their intentions remain unclear." },
-        { x: 65, y: 50, scale: 2.3, duration: 3.2, transitionSpeed: 4.2, description: "They offer a mysterious object." },
-        { x: 50, y: 110, scale: 2, duration: 3.2, transitionSpeed: 4.2, description: "They offer a mysterious object." },
-        { x: 50, y: 50, scale: 1, duration: 2.3, transitionSpeed: 2.6, description: "The tension builds in the air..." },
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 3, description: "A world of intrigue and politics awaits..." },
+        { x: 50, y: -15, scale: 2.4, duration: 6, transitionSpeed: 4, description: "A strange figure appears..." },
+        { x: 30, y: 50, scale: 2.6, duration: 4, transitionSpeed: 3, description: "Their intentions remain unclear." },
+        { x: 65, y: 50, scale: 2.3, duration: 7, transitionSpeed: 5, description: "They offer a mysterious object." },
+        { x: 20, y: 142, scale: 3.2, duration: 3, transitionSpeed: 4, description: "They offer a mysterious object." },
+        { x: 70, y: 136, scale: 3, duration: 7, transitionSpeed: 10, description: "They offer a mysterious object." },
+        { x: 50, y: 50, scale: 1, duration: 3, transitionSpeed: 3, description: "The first steps are always the hardest." },
       ]
     },
     {
@@ -36,13 +37,13 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-3.png",
       title: "The Game",
       focusPoints: [
-        { x: 50, y: 50, scale: 1, duration: 2.3, transitionSpeed: 2.6, description: "The tension builds in the air..." },
-        { x: 50, y: -15, scale: 2.4, duration: 4.0, transitionSpeed: 3.8, description: "A strange figure appears..." },
-        { x: 10, y: 50, scale: 2.8, duration: 2.8, transitionSpeed: 2.4, description: "Their intentions remain unclear." },
-        { x: 50, y: 50, scale: 2.4, duration: 4.0, transitionSpeed: 3.8, description: "A strange figure appears..." },
-        { x: 25, y: 130, scale: 2.8, duration: 2.8, transitionSpeed: 2.4, description: "Their intentions remain unclear." },
-        { x: 65, y: 127, scale: 2.6, duration: 2.8, transitionSpeed: 2.4, description: "Their intentions remain unclear." },
-        { x: 50, y: 50, scale: 1, duration: 2.3, transitionSpeed: 2.6, description: "The tension builds in the air..." },
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 3, description: "The tension builds in the air..." },
+        { x: 50, y: -15, scale: 2.4, duration: 5, transitionSpeed: 5, description: "A strange figure appears..." },
+        { x: 10, y: 50, scale: 2.8, duration: 3, transitionSpeed: 5, description: "Their intentions remain unclear." },
+        { x: 50, y: 50, scale: 2.4, duration: 7, transitionSpeed: 10, description: "A strange figure appears..." },
+        { x: 25, y: 130, scale: 2.8, duration: 6, transitionSpeed: 4, description: "Their intentions remain unclear." },
+        { x: 65, y: 127, scale: 2.6, duration: 7, transitionSpeed: 4, description: "Their intentions remain unclear." },
+        { x: 50, y: 50, scale: 1, duration: 3, transitionSpeed: 3, description: "The tension builds in the air..." },
       ]
     },
     {
@@ -50,10 +51,10 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-4.png",
       title: "Great Houses",
       focusPoints: [
-        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 2.3, description: "A world of intrigue and politics awaits..." },
-        { x: 65, y: -25, scale: 2.5, duration: 3.5, transitionSpeed: 3.1, description: "Through strange landscapes..." },
-        { x: 50, y: 140, scale: 2.5, duration: 4, transitionSpeed: 60, description: "A world of intrigue and politics awaits..." },
-        { x: 50, y: 50, scale: 1, duration: 5, transitionSpeed: 5, description: "A world of intrigue and politics awaits..." },
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 3, description: "The tension builds in the air..." },
+        { x: 60, y: -25, scale: 2.5, duration: 10, transitionSpeed: 4, description: "Through strange landscapes..." },
+        { x: 50, y: 140, scale: 2.5, duration: 4, transitionSpeed: 10, description: "A world of intrigue and politics awaits..." },
+        { x: 50, y: 50, scale: 1, duration: 3, transitionSpeed: 3, description: "The tension builds in the air..." },
       ]
     },
     {
@@ -61,11 +62,11 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-5.png",
       title: "Great Houses",
       focusPoints: [
-        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 2, description: "A world of intrigue and politics awaits..." },
-        { x: 50, y: -15, scale: 2.2, duration: 2.5, transitionSpeed: 3, description: "Secrets whisper in shadowed halls..." },
-        { x: 50, y: 55, scale: 1.8, duration: 3.0, transitionSpeed: 10, description: "A test of courage awaits..." },
-        { x: 50, y: 135, scale: 2.5, duration: 3.0, transitionSpeed: 5, description: "A test of courage awaits..." },
-        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 3, description: "A world of intrigue and politics awaits..." },
+        { x: 50, y: 50, scale: 1, duration: 2, transitionSpeed: 3, description: "The tension builds in the air..." },
+        { x: 50, y: -15, scale: 2.2, duration: 15, transitionSpeed: 3, description: "Secrets whisper in shadowed halls..." },
+        { x: 50, y: 55, scale: 1.8, duration: 10, transitionSpeed: 10, description: "A test of courage awaits..." },
+        { x: 50, y: 135, scale: 2.5, duration: 13, transitionSpeed: 5, description: "A test of courage awaits..." },
+        { x: 50, y: 50, scale: 1, duration: 3, transitionSpeed: 3, description: "The tension builds in the air..." },
       ]
     },
     {

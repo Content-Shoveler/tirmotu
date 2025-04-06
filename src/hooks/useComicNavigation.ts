@@ -533,7 +533,7 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
   // Key navigation - updated to use nextPoint/prevPoint
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight' || e.key === ' ') {
+      if (e.key === 'ArrowRight') {
         nextPoint();
       } else if (e.key === 'ArrowLeft') {
         prevPoint();
@@ -541,7 +541,7 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
         prevPage();
       } else if (e.key === 'ArrowDown') {
         nextPage();
-      } else if (e.key === 'p') {
+      } else if (e.key === 'p' || e.key === ' ') {
         toggleAutoPlay();
       }
     };

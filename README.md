@@ -65,11 +65,11 @@ yarn dev
 
 The comic supports comprehensive keyboard navigation:
 
-- **Right Arrow / Space**: Navigate to the next focus point
+- **Right Arrow**: Navigate to the next focus point
 - **Left Arrow**: Navigate to the previous focus point
 - **Up Arrow**: Navigate to the previous page
 - **Down Arrow**: Navigate to the next page
-- **P Key**: Toggle auto-play mode
+- **P Key / Space Bar**: Toggle auto-play mode
 
 ## Project Structure
 

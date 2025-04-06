@@ -151,6 +151,11 @@ export default function Timeline({
         bar: {
           backgroundColor: isDark ? 'white' : 'gray',
         },
+        thumb: {
+          width: 14,
+          height: 14,
+          boxShadow: isDark ? '0 0 0 2px #242424' : '0 0 0 2px white',
+        },
         mark: {
           backgroundColor: isDark ? 'white' : '#444',
           borderColor: isDark ? 'black' : 'white',
