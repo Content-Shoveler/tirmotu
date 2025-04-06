@@ -50,15 +50,25 @@ export default function ComicImage({
     // For panning to work properly with CSS transforms:
     // - We need to make the transform move in the opposite direction 
     // - Subtracting from 50% centers the focus point
+    // - Apply center offsets to adjust where the "center" is considered to be
     // - Multiply by viewport dimension and divide by 100 to convert percentage to pixels
     // - Apply device-specific multipliers
-    const x = -((focusPoint.x - 50) / 100) * viewportDimensions.width * multipliers.X;
-    const y = -((focusPoint.y - 50) / 100) * viewportDimensions.height * multipliers.Y;
+    const centerX = 50 + multipliers.CENTER_OFFSET_X;
+    const centerY = 50 + multipliers.CENTER_OFFSET_Y;
+    
+    const x = -((focusPoint.x - centerX) / 100) * viewportDimensions.width * multipliers.X;
+    const y = -((focusPoint.y - centerY) / 100) * viewportDimensions.height * multipliers.Y;
     
     console.log('Transform values:', { 
       x, y, 
       scale: focusPoint.scale * multipliers.SCALE, 
       focusPoint,
+      centerPoint: {
+        x: centerX,
+        y: centerY,
+        offsetX: multipliers.CENTER_OFFSET_X,
+        offsetY: multipliers.CENTER_OFFSET_Y
+      },
       viewportDimensions,
       device: isMobileLandscape ? 'mobile-landscape' : 
               (isMobile && isPortrait ? 'mobile-portrait' : 'desktop'),
