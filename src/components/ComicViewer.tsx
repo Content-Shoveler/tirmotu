@@ -6,7 +6,7 @@ import { IconPlayerPlayFilled, IconPlayerPauseFilled, IconChevronLeft, IconChevr
 import useComicNavigation from '@/hooks/useComicNavigation';
 import { FocusPoint } from '@/utils/types';
 import { getPageById } from '@/data/comic-data';
-import { TimelineSlider } from '@/components/timeline/TimelineSlider';
+import { TimelineSlider } from '@/components/TimelineSlider';
 
 interface ComicViewerProps {
   pageId: number;
