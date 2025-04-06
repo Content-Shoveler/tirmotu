@@ -32,7 +32,7 @@ export default function Home() {
       </Head>
       
   <Container 
-    h="100vh" 
+    h="calc(100vh - 120px)" // Account for header and footer (60px each)
     display="flex" 
     style={{ 
       alignItems: 'center', 

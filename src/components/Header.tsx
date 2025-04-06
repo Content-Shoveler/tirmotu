@@ -42,7 +42,7 @@ export default function Header({
         <Toolbar toggleColorScheme={toggleColorScheme} colorScheme={colorScheme} />
         
         <Box style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-          <Title title={title} />
+          <Title title={title} data-header-title={true} />
         </Box>
         
         <Box ml="auto">
@@ -53,6 +53,9 @@ export default function Header({
             onNext={onNext}
             onPrev={onPrev}
             onPlayPause={onPlayPause}
+            data-next-button={true}
+            data-prev-button={true}
+            data-play-button={true}
           />
         </Box>
       </Group>

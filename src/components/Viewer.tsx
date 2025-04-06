@@ -11,6 +11,7 @@ interface ViewerProps {
   currentTitle: string;
   currentFocusPoint: FocusPoint | null;
   isLoading: boolean;
+  navigationDirection?: "forward" | "backward";
 }
 
 export default function Viewer({ 
@@ -18,7 +19,8 @@ export default function Viewer({
   currentImageUrl,
   currentTitle,
   currentFocusPoint,
-  isLoading
+  isLoading,
+  navigationDirection = "forward"
 }: ViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [viewportDimensions, setViewportDimensions] = useState({ width: 0, height: 0 });
@@ -45,6 +47,30 @@ export default function Viewer({
     };
   }, []);
   
+  // Variants for page transitions
+  const pageVariants = {
+    initial: (direction: "forward" | "backward") => ({
+      x: direction === "forward" ? "100%" : "-100%",
+      opacity: 0,
+    }),
+    animate: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        x: { type: 'spring', stiffness: 120, damping: 45 },
+        opacity: { duration: 0.4 },
+      },
+    },
+    exit: (direction: "forward" | "backward") => ({
+      x: direction === "forward" ? "-100%" : "100%",
+      opacity: 0,
+      transition: {
+        x: { type: 'spring', stiffness: 120, damping: 45 },
+        opacity: { duration: 0.4 },
+      },
+    }),
+  };
+  
   return (
     <Box 
       ref={containerRef}
@@ -53,15 +79,34 @@ export default function Viewer({
         flex: 1,
         overflow: 'hidden',
         touchAction: 'none', // Prevent default touch actions for better experience
+        height: '100%',
       }}
     >
-      {/* Comic image with focus point animation */}
-      <ComicImage
-        src={currentImageUrl}
-        alt={currentTitle || `Comic page ${currentPageId}`}
-        currentFocusPoint={currentFocusPoint}
-        viewportDimensions={viewportDimensions}
-      />
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={currentPageId} // This is crucial for AnimatePresence to detect changes
+          custom={navigationDirection || "forward"}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={pageVariants}
+          style={{ 
+            width: '100%', 
+            height: '100%',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+        >
+          {/* Comic image with focus point animation */}
+          <ComicImage
+            src={currentImageUrl}
+            alt={currentTitle || `Comic page ${currentPageId}`}
+            currentFocusPoint={currentFocusPoint}
+            viewportDimensions={viewportDimensions}
+          />
+        </motion.div>
+      </AnimatePresence>
       
       {/* Caption overlay */}
       <AnimatePresence>

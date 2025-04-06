@@ -28,10 +28,19 @@ export default function ComicImage({
   const getTransformForFocusPoint = (focusPoint: FocusPoint | null) => {
     if (!focusPoint) return { x: 0, y: 0, scale: 1 };
     
-    // Convert percentage to viewport coordinates
-    // Invert y-percentage because CSS transforms move in opposite direction
-    const x = -(focusPoint.x - 50) * (viewportDimensions.width / 100);
-    const y = -(focusPoint.y - 50) * (viewportDimensions.height / 100);
+    // For panning to work properly with CSS transforms:
+    // - We need to make the transform move in the opposite direction 
+    // - Subtracting from 50% centers the focus point
+    // - Multiply by viewport dimension and divide by 100 to convert percentage to pixels
+    const x = -((focusPoint.x - 50) / 100) * viewportDimensions.width;
+    const y = -((focusPoint.y - 50) / 100) * viewportDimensions.height;
+    
+    console.log('Transform values:', { 
+      x, y, 
+      scale: focusPoint.scale, 
+      focusPoint,
+      viewportDimensions 
+    });
     
     return {
       x,

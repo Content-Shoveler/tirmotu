@@ -1,46 +1,20 @@
 import { useRouter } from 'next/router';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
-import { motion } from 'framer-motion';
-import { useMantineColorScheme, Container, Stack, Title, Text, Group, Button } from '@mantine/core';
+import { Container, Stack, Title, Text, Group, Button } from '@mantine/core';
 import { comicData } from '@/data/comic-data';
 import ComicViewer from '@/components/ComicViewer';
 
-interface ComicPageProps {
+interface PageProps {
   pageNumber: number;
   navigationDirection?: "forward" | "backward";
 }
 
-const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection = "forward" }) => {
+const Page: NextPage<PageProps> = ({ pageNumber, navigationDirection = "forward" }) => {
   const router = useRouter();
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   
   // Get the current page data
   const page = comicData.pages.find(p => p.id === pageNumber);
-  
-  // Variants for page transitions
-  const variants = {
-    initial: (direction: "forward" | "backward") => ({
-      x: direction === "forward" ? "100%" : "-100%",
-      opacity: 0,
-    }),
-    animate: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        x: { type: 'spring', stiffness: 120, damping: 45 },
-        opacity: { duration: 0.4 },
-      },
-    },
-    exit: (direction: "forward" | "backward") => ({
-      x: direction === "forward" ? "-100%" : "100%",
-      opacity: 0,
-      transition: {
-        x: { type: 'spring', stiffness: 120, damping: 45 },
-        opacity: { duration: 0.4 },
-      },
-    }),
-  };
   
   // Check if this is the end page (one number more than there are comic pages)
   const isEndPage = pageNumber === comicData.pages.length + 1;
@@ -49,7 +23,7 @@ const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection =
   if (isEndPage) {
     return (
       <Container 
-        h="100vh" 
+        h="calc(100vh - 120px)" // Account for header and footer (60px each)
         display="flex" 
         style={{ 
           justifyContent: 'center', 
@@ -81,7 +55,7 @@ const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection =
     console.error(`Page not found: ${pageNumber}`);
     return (
       <Container 
-        h="100vh" 
+        h="calc(100vh - 120px)" // Account for header and footer (60px each)
         display="flex" 
         style={{ 
           justifyContent: 'center', 
@@ -106,20 +80,10 @@ const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection =
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
       </Head>
       
-      <motion.div
-        custom={navigationDirection}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        variants={variants}
-        style={{ width: '100%', height: '100vh' }}
-      >
-        <ComicViewer 
-          pageId={pageNumber} 
-          colorScheme={colorScheme} 
-          toggleColorScheme={toggleColorScheme} 
-        />
-      </motion.div>
+      <ComicViewer 
+        pageId={pageNumber} 
+        navigationDirection={navigationDirection}
+      />
     </>
   );
 };
@@ -151,4 +115,4 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   };
 };
 
-export default ComicPage;
+export default Page;

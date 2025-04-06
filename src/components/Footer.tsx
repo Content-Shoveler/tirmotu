@@ -30,6 +30,7 @@ export default function Footer({
         absoluteIndex={absoluteIndex}
         totalNavigationPoints={totalNavigationPoints}
         navigateToAbsoluteIndex={navigateToAbsoluteIndex}
+        data-timeline={true}
       />
     </Box>
   );

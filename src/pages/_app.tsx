@@ -1,13 +1,14 @@
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import { AnimatePresence } from 'framer-motion';
-import { MantineProvider, createTheme } from '@mantine/core';
+import { AnimatePresence, motion } from 'framer-motion';
+import { MantineProvider, createTheme, AppShell } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { useState, useEffect } from 'react';
-import Layout from '@/components/Layout';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { getPageById } from '@/data/comic-data';
 import '@mantine/core/styles.css';
 import '@/styles/globals.css';
-// Add debugging for route changes
 
 // Define Mantine theme
 const theme = createTheme({
@@ -80,26 +81,111 @@ export default function App({ Component, pageProps }: AppProps) {
     setPrevPath(router.asPath);
   }, [router.asPath]);
 
+  // Get current page title and determine if we're on a comic page
+  const isHomePage = router.pathname === '/';
+  const isEndPage = router.pathname === '/[pageNumber]' && router.query.pageNumber === String(12 + 1); // End page is one more than total pages
+  const pageNumber = router.pathname === '/[pageNumber]' ? parseInt(router.query.pageNumber as string, 10) : null;
+  
+  // Default navigation handlers
+  const defaultNextPoint = () => {
+    if (isHomePage) {
+      router.push('/1');
+    }
+    return false;
+  };
+  
+  const defaultPrevPoint = () => {
+    return false;
+  };
+  
+  const defaultToggleAutoPlay = () => {
+    // No-op for non-comic pages
+  };
+  
+  // Default navigation state for non-comic pages
+  const defaultNavigationState = {
+    isPlaying: false,
+    hasNext: !isEndPage, // There's a next page unless we're on the end page
+    hasPrev: !isHomePage, // There's a prev page unless we're on the home page
+    onNext: defaultNextPoint,
+    onPrev: defaultPrevPoint,
+    onPlayPause: defaultToggleAutoPlay,
+    absoluteIndex: isHomePage ? 0 : (isEndPage ? 999 : -1), // Home page is first, end page is last
+    totalNavigationPoints: 100, // Placeholder
+    navigateToAbsoluteIndex: () => false
+  };
+
   return (
     <MantineProvider
       theme={theme}
       forceColorScheme={colorScheme}
     >
-      <Layout colorScheme={colorScheme}>
-        <AnimatePresence
-          mode="wait"
-          initial={false}
-          onExitComplete={() => window.scrollTo(0, 0)}
-          custom={navigationDirection}
-        >
-        <Component 
-          {...pageProps} 
-          key={router.asPath} 
-          navigationDirection={navigationDirection}
-          toggleColorScheme={toggleColorScheme}
-        />
-        </AnimatePresence>
-      </Layout>
+      <AppShell
+        header={{ height: 60 }}
+        footer={{ height: 60 }}
+        bg={colorScheme === 'dark' ? '#1A1B1E' : '#FFFFFF'}
+        c={colorScheme === 'dark' ? '#FFFFFF' : '#000000'}
+        styles={{
+          main: {
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingTop: '60px',
+            paddingBottom: '60px',
+          }
+        }}
+      >
+        <AppShell.Header>
+          <Header 
+            title={pageNumber ? getPageById(pageNumber)?.title || 'Comic Viewer' : 'Immersive Comic Experience'}
+            isPlaying={defaultNavigationState.isPlaying}
+            hasNext={defaultNavigationState.hasNext}
+            hasPrev={defaultNavigationState.hasPrev}
+            onNext={defaultNavigationState.onNext}
+            onPrev={defaultNavigationState.onPrev}
+            onPlayPause={defaultNavigationState.onPlayPause}
+            toggleColorScheme={toggleColorScheme}
+            colorScheme={colorScheme}
+          />
+        </AppShell.Header>
+        
+        <AppShell.Main>
+          <AnimatePresence
+            mode="wait"
+            initial={false}
+            onExitComplete={() => window.scrollTo(0, 0)}
+            custom={navigationDirection}
+          >
+            <motion.div
+              key={router.asPath}
+              initial={{ opacity: 0, x: navigationDirection === "forward" ? 100 : -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: navigationDirection === "forward" ? -100 : 100 }}
+              transition={{ 
+                type: 'spring', 
+                stiffness: 300, 
+                damping: 30 
+              }}
+              style={{ width: '100%', height: '100%' }}
+            >
+              <Component 
+                {...pageProps} 
+                navigationDirection={navigationDirection}
+                colorScheme={colorScheme}
+                toggleColorScheme={toggleColorScheme}
+              />
+            </motion.div>
+          </AnimatePresence>
+        </AppShell.Main>
+        
+        <AppShell.Footer>
+          <Footer 
+            absoluteIndex={defaultNavigationState.absoluteIndex}
+            totalNavigationPoints={defaultNavigationState.totalNavigationPoints}
+            navigateToAbsoluteIndex={defaultNavigationState.navigateToAbsoluteIndex}
+            colorScheme={colorScheme}
+          />
+        </AppShell.Footer>
+      </AppShell>
     </MantineProvider>
   );
 }

@@ -9,12 +9,14 @@ interface TimelineProps {
   absoluteIndex: number;
   totalNavigationPoints: number;
   navigateToAbsoluteIndex: (index: number) => boolean;
+  'data-timeline'?: boolean;
 }
 
 export default function Timeline({ 
   absoluteIndex, 
   totalNavigationPoints, 
-  navigateToAbsoluteIndex 
+  navigateToAbsoluteIndex,
+  'data-timeline': timelineData
 }: TimelineProps) {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
@@ -58,6 +60,7 @@ export default function Timeline({
   return (
     <Slider
       value={absoluteIndex}
+      data-timeline={timelineData}
       onChange={(value) => navigateToAbsoluteIndex(value)}
       min={0}
       max={totalNavigationPoints - 1}
