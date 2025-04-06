@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { ActionIcon, Tooltip } from '@mantine/core';
+import { ActionIcon, Tooltip, MantineColorScheme } from '@mantine/core';
 import { IconSun, IconMoon } from '@tabler/icons-react';
 
 interface ThemeToggleProps {
   toggleColorScheme: () => void;
-  colorScheme: 'light' | 'dark';
+  colorScheme: MantineColorScheme;
 }
 
 export default function ThemeToggle({ toggleColorScheme, colorScheme }: ThemeToggleProps) {

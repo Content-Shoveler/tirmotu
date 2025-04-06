@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { useState, useEffect } from 'react';
-import Layout from '@/components/layout/Layout';
+import Layout from '@/components/Layout';
 import '@mantine/core/styles.css';
 import '@/styles/globals.css';
 // Add debugging for route changes
@@ -85,18 +85,19 @@ export default function App({ Component, pageProps }: AppProps) {
       theme={theme}
       forceColorScheme={colorScheme}
     >
-      <Layout toggleColorScheme={toggleColorScheme} colorScheme={colorScheme}>
+      <Layout colorScheme={colorScheme}>
         <AnimatePresence
           mode="wait"
           initial={false}
           onExitComplete={() => window.scrollTo(0, 0)}
           custom={navigationDirection}
         >
-          <Component 
-            {...pageProps} 
-            key={router.asPath} 
-            navigationDirection={navigationDirection}
-          />
+        <Component 
+          {...pageProps} 
+          key={router.asPath} 
+          navigationDirection={navigationDirection}
+          toggleColorScheme={toggleColorScheme}
+        />
         </AnimatePresence>
       </Layout>
     </MantineProvider>

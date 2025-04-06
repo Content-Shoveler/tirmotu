@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
-import { Container, Stack, Title, Text, Group, Button } from '@mantine/core';
+import { useMantineColorScheme, Container, Stack, Title, Text, Group, Button } from '@mantine/core';
 import { comicData } from '@/data/comic-data';
 import ComicViewer from '@/components/ComicViewer';
 
@@ -13,6 +13,7 @@ interface ComicPageProps {
 
 const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection = "forward" }) => {
   const router = useRouter();
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   
   // Get the current page data
   const page = comicData.pages.find(p => p.id === pageNumber);
@@ -113,7 +114,11 @@ const ComicPage: NextPage<ComicPageProps> = ({ pageNumber, navigationDirection =
         variants={variants}
         style={{ width: '100%', height: '100vh' }}
       >
-        <ComicViewer pageId={pageNumber} />
+        <ComicViewer 
+          pageId={pageNumber} 
+          colorScheme={colorScheme} 
+          toggleColorScheme={toggleColorScheme} 
+        />
       </motion.div>
     </>
   );
