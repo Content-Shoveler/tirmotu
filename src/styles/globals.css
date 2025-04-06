@@ -1,28 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  :root {
-    --background: #ffffff;
-    --foreground: #000000;
-  }
-
-  .dark {
-    --background: #000000;
-    --foreground: #ffffff;
-  }
-}
-
-:root {
-  --max-width: 1200px;
-  --border-radius: 8px;
-}
+/* Minimal global styles - most styling managed by Mantine */
 
 * {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 html,
@@ -32,29 +11,12 @@ body {
   overflow-x: hidden;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
+/* Hide scrollbar across browsers while allowing scrolling */
 ::-webkit-scrollbar {
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 * {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
