@@ -82,8 +82,8 @@ export function TimelineSlider({
           borderWidth: 0,
         },
         mark: {
-          width: 8,
-          height: 8,
+          width: 12,
+          height: 12,
           backgroundColor: isDark ? 'white' : 'black',
           opacity: 0.8,
           transform: 'translateX(-50%) translateY(-50%)',
@@ -93,7 +93,7 @@ export function TimelineSlider({
         },
         markLabel: {
           fontSize: 10,
-          marginTop: 5,
+          marginTop: 0,
           color: isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
         }
       })}

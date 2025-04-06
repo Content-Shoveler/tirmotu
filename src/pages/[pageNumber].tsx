@@ -5,12 +5,19 @@ import { Container, Stack, Title, Text, Group, Button } from '@mantine/core';
 import { comicData } from '@/data/comic-data';
 import ComicViewer from '@/components/ComicViewer';
 
+import { ComicNavigationState } from '@/components/ComicViewer';
+
 interface PageProps {
   pageNumber: number;
   navigationDirection?: "forward" | "backward";
+  updateAppNavigationState?: (state: ComicNavigationState) => void;
 }
 
-const Page: NextPage<PageProps> = ({ pageNumber, navigationDirection = "forward" }) => {
+const Page: NextPage<PageProps> = ({ 
+  pageNumber, 
+  navigationDirection = "forward",
+  updateAppNavigationState 
+}) => {
   const router = useRouter();
   
   // Get the current page data
@@ -83,6 +90,7 @@ const Page: NextPage<PageProps> = ({ pageNumber, navigationDirection = "forward"
       <ComicViewer 
         pageId={pageNumber} 
         navigationDirection={navigationDirection}
+        updateAppNavigationState={updateAppNavigationState}
       />
     </>
   );

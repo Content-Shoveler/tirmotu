@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Button, Card, Container, Stack, Text, Group, Title } from '@mantine/core';
 import { motion } from 'framer-motion';
+import { ComicNavigationState } from '@/components/ComicViewer';
 
-export default function Home() {
+interface HomeProps {
+  updateAppNavigationState?: (state: ComicNavigationState) => void;
+}
+
+export default function Home({ updateAppNavigationState }: HomeProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const startReading = async () => {
+  // Define startReading with useCallback to prevent recreation on each render
+  const startReading = useCallback(async () => {
     setIsLoading(true);
     try {
       await router.push('/1');
@@ -17,7 +23,30 @@ export default function Home() {
       console.error('Navigation error:', error);
       setIsLoading(false);
     }
-  };
+  }, [router]);
+  
+  // Create a simplified navigation state for the home page
+  useEffect(() => {
+    if (updateAppNavigationState) {
+      const navigationState = {
+        currentPageId: 0,
+        isAutoPlaying: false,
+        hasNextPoint: true,
+        hasPrevPoint: false,
+        currentFocusPoint: null,
+        isLoading: false,
+        absoluteIndex: 0,
+        totalNavigationPoints: 100,
+        title: 'Immersive Comic Experience',
+        nextPoint: startReading,
+        prevPoint: () => false,
+        navigateToAbsoluteIndex: () => false,
+        toggleAutoPlay: () => {}
+      };
+      
+      updateAppNavigationState(navigationState);
+    }
+  }, [updateAppNavigationState, startReading]);
 
   return (
     <>

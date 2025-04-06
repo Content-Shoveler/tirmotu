@@ -3,10 +3,11 @@ import { useRouter } from 'next/router';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MantineProvider, createTheme, AppShell } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getPageById } from '@/data/comic-data';
+import { ComicNavigationState } from '@/components/ComicViewer';
 import '@mantine/core/styles.css';
 import '@/styles/globals.css';
 
@@ -23,6 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const [navigationDirection, setNavigationDirection] = useState<"forward" | "backward">("forward");
   const [prevPath, setPrevPath] = useState<string>("");
+  
   // Use localStorage to persist color scheme
   const [colorScheme, setColorScheme] = useLocalStorage<'light' | 'dark'>({
     key: 'mantine-color-scheme',
@@ -35,6 +37,9 @@ export default function App({ Component, pageProps }: AppProps) {
     setColorScheme(newColorScheme);
     console.log('Theme toggled to:', newColorScheme);
   };
+  
+  // Navigation state that can be updated by ComicViewer
+  const [navigationState, setNavigationState] = useState<ComicNavigationState | null>(null);
   
   // Add router change event listeners for debugging
   useEffect(() => {
@@ -65,8 +70,8 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (prevPath) {
       // For comic pages, determine direction based on page number
-      const prevMatch = prevPath.match(/\/comic\/(\d+)/);
-      const currentMatch = router.asPath.match(/\/comic\/(\d+)/);
+      const prevMatch = prevPath.match(/\/(\d+)/);
+      const currentMatch = router.asPath.match(/\/(\d+)/);
       
       if (prevMatch && currentMatch) {
         const prevPage = parseInt(prevMatch[1], 10);
@@ -86,33 +91,49 @@ export default function App({ Component, pageProps }: AppProps) {
   const isEndPage = router.pathname === '/[pageNumber]' && router.query.pageNumber === String(12 + 1); // End page is one more than total pages
   const pageNumber = router.pathname === '/[pageNumber]' ? parseInt(router.query.pageNumber as string, 10) : null;
   
-  // Default navigation handlers
-  const defaultNextPoint = () => {
-    if (isHomePage) {
-      router.push('/1');
-    }
-    return false;
-  };
+  // Default navigation handlers for homepage and other non-comic pages
+  const handleUpdateNavigationState = useCallback((state: ComicNavigationState) => {
+    setNavigationState(state);
+  }, []);
   
-  const defaultPrevPoint = () => {
-    return false;
-  };
+  // Homepage specific navigation
+  const startReading = useCallback(() => {
+    router.push('/1');
+    return true;
+  }, [router]);
   
-  const defaultToggleAutoPlay = () => {
-    // No-op for non-comic pages
-  };
-  
-  // Default navigation state for non-comic pages
+  // Default navigation state for homepage and other non-comic pages
   const defaultNavigationState = {
     isPlaying: false,
-    hasNext: !isEndPage, // There's a next page unless we're on the end page
-    hasPrev: !isHomePage, // There's a prev page unless we're on the home page
-    onNext: defaultNextPoint,
-    onPrev: defaultPrevPoint,
-    onPlayPause: defaultToggleAutoPlay,
+    hasNext: !isEndPage && (isHomePage || pageNumber !== null), // There's a next unless we're on the end page
+    hasPrev: !isHomePage, // There's a prev unless we're on the home page
     absoluteIndex: isHomePage ? 0 : (isEndPage ? 999 : -1), // Home page is first, end page is last
     totalNavigationPoints: 100, // Placeholder
-    navigateToAbsoluteIndex: () => false
+  };
+  
+  // Memoize default fallback handlers to prevent unnecessary rerenders
+  const defaultBackHandler = useCallback(() => {
+    router.back();
+    return true;
+  }, [router]);
+  
+  const noopHandler = useCallback(() => false, []);
+  
+  // Memoize the derived states
+  const headerState = {
+    title: navigationState?.title || (pageNumber ? getPageById(pageNumber)?.title || 'Comic Viewer' : 'Immersive Comic Experience'),
+    isPlaying: navigationState?.isAutoPlaying || false,
+    hasNext: navigationState?.hasNextPoint ?? defaultNavigationState.hasNext, 
+    hasPrev: navigationState?.hasPrevPoint ?? defaultNavigationState.hasPrev,
+    onNext: navigationState?.nextPoint || (isHomePage ? startReading : noopHandler),
+    onPrev: navigationState?.prevPoint || defaultBackHandler,
+    onPlayPause: navigationState?.toggleAutoPlay || noopHandler,
+  };
+  
+  const footerState = {
+    absoluteIndex: navigationState?.absoluteIndex ?? defaultNavigationState.absoluteIndex,
+    totalNavigationPoints: navigationState?.totalNavigationPoints ?? defaultNavigationState.totalNavigationPoints,
+    navigateToAbsoluteIndex: navigationState?.navigateToAbsoluteIndex || noopHandler,
   };
 
   return (
@@ -136,13 +157,13 @@ export default function App({ Component, pageProps }: AppProps) {
       >
         <AppShell.Header>
           <Header 
-            title={pageNumber ? getPageById(pageNumber)?.title || 'Comic Viewer' : 'Immersive Comic Experience'}
-            isPlaying={defaultNavigationState.isPlaying}
-            hasNext={defaultNavigationState.hasNext}
-            hasPrev={defaultNavigationState.hasPrev}
-            onNext={defaultNavigationState.onNext}
-            onPrev={defaultNavigationState.onPrev}
-            onPlayPause={defaultNavigationState.onPlayPause}
+            title={headerState.title}
+            isPlaying={headerState.isPlaying}
+            hasNext={headerState.hasNext}
+            hasPrev={headerState.hasPrev}
+            onNext={headerState.onNext}
+            onPrev={headerState.onPrev}
+            onPlayPause={headerState.onPlayPause}
             toggleColorScheme={toggleColorScheme}
             colorScheme={colorScheme}
           />
@@ -172,6 +193,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 navigationDirection={navigationDirection}
                 colorScheme={colorScheme}
                 toggleColorScheme={toggleColorScheme}
+                updateAppNavigationState={handleUpdateNavigationState}
               />
             </motion.div>
           </AnimatePresence>
@@ -179,9 +201,9 @@ export default function App({ Component, pageProps }: AppProps) {
         
         <AppShell.Footer>
           <Footer 
-            absoluteIndex={defaultNavigationState.absoluteIndex}
-            totalNavigationPoints={defaultNavigationState.totalNavigationPoints}
-            navigateToAbsoluteIndex={defaultNavigationState.navigateToAbsoluteIndex}
+            absoluteIndex={footerState.absoluteIndex}
+            totalNavigationPoints={footerState.totalNavigationPoints}
+            navigateToAbsoluteIndex={footerState.navigateToAbsoluteIndex}
             colorScheme={colorScheme}
           />
         </AppShell.Footer>

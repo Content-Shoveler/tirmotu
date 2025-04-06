@@ -57,11 +57,17 @@ export default function Timeline({
     return isPageStart ? 16 : 10;
   };
   
+  // Handle user interaction with the timeline
+  const handleSliderChange = (value: number) => {
+    console.log(`Timeline: Navigating to absolute index ${value}`);
+    return navigateToAbsoluteIndex(value);
+  };
+  
   return (
     <Slider
       value={absoluteIndex}
       data-timeline={timelineData}
-      onChange={(value) => navigateToAbsoluteIndex(value)}
+      onChange={handleSliderChange}
       min={0}
       max={totalNavigationPoints - 1}
       step={1}
@@ -70,7 +76,8 @@ export default function Timeline({
       thumbSize={getThumbSize(absoluteIndex)}
       styles={() => ({
         root: {
-          height: 30,
+          paddingBottom: '15px',
+          width: '100%',
         },
         track: {
           backgroundColor: isDark ? 'rgba(200, 200, 200, 0.2)' : 'rgba(0, 0, 0, 0.1)',
