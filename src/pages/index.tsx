@@ -46,28 +46,42 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
   const navigateToAbsoluteIndex = useCallback((index: number) => {
     console.log(`Home: Navigating to absolute index ${index}`);
     
-    // If index is 0, we stay on the home page
-    if (index === 0) {
-      return true;
-    }
+    // Constants for timeline spacing (must match those in Timeline.tsx)
+    const HOME_INDEX = 0;
+    const COMIC_START_INDEX = 2; // Space for Home (0) and separator (1)
     
     // Get the total number of focus points from the comic data
     const totalFocusPoints = comicData.pages.reduce(
       (total: number, page: ComicPage) => total + page.focusPoints.length, 0
     );
     
+    // If index is HOME_INDEX (0), we stay on the home page
+    if (index === HOME_INDEX) {
+      return true;
+    }
+    
+    // Skip the separator mark (index 1)
+    if (index === 1) {
+      return false;
+    }
+    
     // If it's the last index (end page), navigate to the end page
-    if (index === totalFocusPoints + 1) { // +1 to account for home page at index 0
+    const END_INDEX = totalFocusPoints + COMIC_START_INDEX;
+    if (index === END_INDEX) {
       router.push(`/${comicData.pages.length + 1}`);
       return true;
     }
     
-    // For other indices, determine the corresponding page and focus point
-    const pageAndPoint = getPageAndFocusPointFromAbsoluteIndex(index - 1); // -1 to adjust for home page at index 0
-    
-    if (pageAndPoint) {
-      router.push(`/${pageAndPoint.pageId}`);
-      return true;
+    // For comic content indices, adjust the index to account for Home and separator offsets
+    if (index >= COMIC_START_INDEX) {
+      // Subtract the offset before looking up the page/focus point
+      const adjustedIndex = index - COMIC_START_INDEX;
+      const pageAndPoint = getPageAndFocusPointFromAbsoluteIndex(adjustedIndex);
+      
+      if (pageAndPoint) {
+        router.push(`/${pageAndPoint.pageId}`);
+        return true;
+      }
     }
     
     return false;
@@ -81,6 +95,10 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
         (total: number, page: ComicPage) => total + page.focusPoints.length, 0
       );
       
+      // Constants for timeline spacing (must match those in Timeline.tsx)
+      const HOME_INDEX = 0;
+      const COMIC_START_INDEX = 2; // Space for Home (0) and separator (1)
+      
       const navigationState = {
         currentPageId: 0,
         isAutoPlaying: isAutoPlaying,
@@ -88,9 +106,9 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
         hasPrevPoint: false,
         currentFocusPoint: null,
         isLoading: false,
-        absoluteIndex: 0,
-        // Add 2 to account for home page (index 0) and end page (at the end)
-        totalNavigationPoints: totalFocusPoints + 2, 
+        absoluteIndex: HOME_INDEX, // Home is at index 0
+        // Add COMIC_START_INDEX to account for homepage and spacing offsets
+        totalNavigationPoints: totalFocusPoints + COMIC_START_INDEX + 1, // +1 for end page
         title: 'Immersive Comic Experience',
         nextPoint: startReading,
         prevPoint: () => false,

@@ -6,7 +6,8 @@ import {
   getPrevPageId,
   getAbsoluteIndexFromPageAndFocusPoint,
   getPageAndFocusPointFromAbsoluteIndex,
-  getTotalNavigationPoints
+  getTotalNavigationPoints,
+  comicData
 } from '@/data/comic-data';
 import { FocusPoint } from '@/utils/types';
 
@@ -95,17 +96,6 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
   const currentPage = getPageById(currentPageId);
   const focusPoints = currentPage?.focusPoints || [];
   
-  // Update absolute index when page or focus point changes
-  useEffect(() => {
-    const newAbsoluteIndex = getAbsoluteIndexFromPageAndFocusPoint(
-      currentPageId, 
-      currentFocusPointIndex
-    );
-    if (newAbsoluteIndex !== -1) {
-      setAbsoluteIndex(newAbsoluteIndex);
-    }
-  }, [currentPageId, currentFocusPointIndex]);
-  
   // Calculate navigation availability
   const totalPoints = getTotalNavigationPoints();
   const hasNextPoint = absoluteIndex < totalPoints - 1;
@@ -113,14 +103,69 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
   const hasNextPage = getNextPageId(currentPageId) !== null;
   const hasPrevPage = getPrevPageId(currentPageId) !== null;
   
+  // Timeline spacing constants (must match Timeline.tsx and index.tsx)
+  const COMIC_START_INDEX = 2; // Space for Home (0) and separator (1)
+  
+  // Update absolute index when page or focus point changes
+  useEffect(() => {
+    // For the end page, use totalPoints + offset
+    if (currentPageId === comicData.pages.length + 1) {
+      setAbsoluteIndex(totalPoints + COMIC_START_INDEX);
+      return;
+    }
+    
+    // Get the base absolute index from the comic data
+    const baseAbsoluteIndex = getAbsoluteIndexFromPageAndFocusPoint(
+      currentPageId, 
+      currentFocusPointIndex
+    );
+    
+    if (baseAbsoluteIndex !== -1) {
+      // Apply offset for comic content to account for Home and separator
+      const adjustedIndex = baseAbsoluteIndex + COMIC_START_INDEX;
+      setAbsoluteIndex(adjustedIndex);
+    }
+  }, [currentPageId, currentFocusPointIndex, totalPoints]);
+  
   // Get current focus point
   const currentFocusPoint = focusPoints[currentFocusPointIndex] || null;
   
   // Navigation based on absolute index
   const navigateToAbsoluteIndex = useCallback((newAbsoluteIndex: number) => {
-    if (newAbsoluteIndex < 0 || newAbsoluteIndex >= totalPoints) return false;
+    console.log(`useComicNavigation: Navigating to absolute index ${newAbsoluteIndex}`);
     
-    const result = getPageAndFocusPointFromAbsoluteIndex(newAbsoluteIndex);
+    // Constants for timeline spacing (must match those in Timeline.tsx)
+    const HOME_INDEX = 0;
+    const COMIC_START_INDEX = 2; // Space for Home (0) and separator (1)
+    
+    // Handle special indices
+    
+    // Home page
+    if (newAbsoluteIndex === HOME_INDEX) {
+      setIsLoading(true);
+      router.push('/');
+      return true;
+    }
+    
+    // Skip separator
+    if (newAbsoluteIndex === 1) return false;
+    
+    // End page
+    const END_INDEX = totalPoints + COMIC_START_INDEX;
+    if (newAbsoluteIndex === END_INDEX) {
+      setIsLoading(true);
+      router.push(`/${comicData.pages.length + 1}`);
+      return true;
+    }
+    
+    // Validate range for comic content
+    if (newAbsoluteIndex < COMIC_START_INDEX || newAbsoluteIndex >= END_INDEX) return false;
+    
+    // Adjust the index back to match the comic data indexing
+    const adjustedIndex = newAbsoluteIndex - COMIC_START_INDEX;
+    
+    // Get the corresponding page and focus point
+    const result = getPageAndFocusPointFromAbsoluteIndex(adjustedIndex);
     if (!result) return false;
     
     if (result.pageId !== currentPageId) {

@@ -21,6 +21,11 @@ export default function Timeline({
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
   
+  // We'll offset the actual comic content to create spacing between Home, Pages, and End
+  const HOME_INDEX = 0;
+  const COMIC_START_INDEX = 2; // Leave 2 slots for Home (position 0) and separation (position 1)
+  const END_INDEX = totalNavigationPoints - 1;
+  
   // Generate comic page marks (filtering out nulls first to avoid TypeScript errors)
   const pageMarks = comicData.pages
     .map(page => {
@@ -31,8 +36,11 @@ export default function Timeline({
         
       if (pageStartIndex === -1) return null;
       
+      // Offset the index to leave space for Home
+      const adjustedIndex = pageStartIndex + COMIC_START_INDEX;
+      
       return {
-        value: pageStartIndex,
+        value: adjustedIndex,
         label: `${page.id}`
       };
     })
@@ -41,39 +49,51 @@ export default function Timeline({
   // Generate marks for homepage, all comic pages, and end page
   const marks: SliderProps['marks'] = [
     // Homepage mark (absoluteIndex = 0)
-    { value: 0, label: 'Home' },
+    { value: HOME_INDEX, label: 'Home' },
     
     // Add filtered comic page marks
     ...pageMarks,
     
     // End page mark (set to totalNavigationPoints - 1)
-    { value: totalNavigationPoints - 1, label: 'End' }
+    { value: END_INDEX, label: 'End' }
   ];
   
   // Get label content based on focus point info
   const getLabel = (value: number) => {
     // Special case for homepage
-    if (value === 0) return "Home";
+    if (value === HOME_INDEX) return "Home";
     
     // Special case for end page
-    if (value === totalNavigationPoints - 1) return "The End";
+    if (value === END_INDEX) return "The End";
     
-    const pointInfo = getFocusPointByAbsoluteIndex(value);
-    if (!pointInfo) return `Point ${value + 1}`;
+    // Empty slot reserved for spacing
+    if (value === 1) return "";
+    
+    // Adjust the index back to match comic data indexing
+    const adjustedValue = value - COMIC_START_INDEX;
+    
+    const pointInfo = getFocusPointByAbsoluteIndex(adjustedValue);
+    if (!pointInfo) return `Point ${value}`;
     
     const isPageStart = pointInfo.page.focusPoints.indexOf(pointInfo.focusPoint) === 0;
     
     return isPageStart 
       ? `Page ${pointInfo.page.id}: ${pointInfo.page.title || ''}`
-      : pointInfo.focusPoint.description || `Focus point ${value + 1}`;
+      : pointInfo.focusPoint.description || `Focus point ${adjustedValue + 1}`;
   };
   
   // Function to determine thumb size based on if it's a page start point
   const getThumbSize = (value: number) => {
     // Special cases for homepage and end page
-    if (value === 0 || value === totalNavigationPoints - 1) return 16;
+    if (value === HOME_INDEX || value === END_INDEX) return 16;
     
-    const pointInfo = getFocusPointByAbsoluteIndex(value);
+    // Empty slot reserved for spacing - make thumb invisible
+    if (value === 1) return 0;
+    
+    // Adjust the index back to match comic data indexing
+    const adjustedValue = value - COMIC_START_INDEX;
+    
+    const pointInfo = getFocusPointByAbsoluteIndex(adjustedValue);
     if (!pointInfo) return 10;
     
     const isPageStart = pointInfo.page.focusPoints.indexOf(pointInfo.focusPoint) === 0;
@@ -83,6 +103,10 @@ export default function Timeline({
   // Handle user interaction with the timeline
   const handleSliderChange = (value: number) => {
     console.log(`Timeline: Navigating to absolute index ${value}`);
+    
+    // Skip the spacer mark - if clicked, do nothing
+    if (value === 1) return false;
+    
     return navigateToAbsoluteIndex(value);
   };
   
