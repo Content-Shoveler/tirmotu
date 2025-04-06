@@ -61,9 +61,11 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-5.png",
       title: "Great Houses",
       focusPoints: [
-        { x: 60, y: 45, scale: 1.3, duration: 2.5, transitionSpeed: 3.2, description: "Secrets whisper in shadowed halls..." },
-        { x: 25, y: 35, scale: 2.6, duration: 3.0, transitionSpeed: 2.8, description: "A test of courage awaits..." },
-        { x: 80, y: 65, scale: 1.7, duration: 2.3, transitionSpeed: 4.5, description: "Will they overcome it?" },
+        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 2, description: "A world of intrigue and politics awaits..." },
+        { x: 50, y: -15, scale: 2.2, duration: 2.5, transitionSpeed: 3, description: "Secrets whisper in shadowed halls..." },
+        { x: 50, y: 55, scale: 1.8, duration: 3.0, transitionSpeed: 10, description: "A test of courage awaits..." },
+        { x: 50, y: 135, scale: 2.5, duration: 3.0, transitionSpeed: 5, description: "A test of courage awaits..." },
+        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 3, description: "A world of intrigue and politics awaits..." },
       ]
     },
     {
@@ -71,12 +73,13 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-6.png",
       title: "Great Houses",
       focusPoints: [
-        { x: 45, y: 55, scale: 1.2, duration: 2.1, transitionSpeed: 2.9, description: "Power dynamics shift constantly..." },
-        { x: 20, y: 30, scale: 1.9, duration: 4.5, transitionSpeed: 3.2, description: "The path forward emerges..." },
-        { x: 65, y: 50, scale: 2.4, duration: 3.3, transitionSpeed: 2.6, description: "Enemies lurk in the shadows." },
-        { x: 40, y: 75, scale: 1.8, duration: 2.9, transitionSpeed: 3.8, description: "Alliances must be formed." },
-        { x: 75, y: 20, scale: 2.1, duration: 3.8, transitionSpeed: 3.0, description: "Old feuds threaten to reignite." },
-        { x: 15, y: 65, scale: 1.5, duration: 2.6, transitionSpeed: 2.4, description: "Trust is a rare and valuable currency." },
+        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 2, description: "A world of intrigue and politics awaits..." },
+        { x: 25, y: 40, scale: 3.4, duration: 4.5, transitionSpeed: 3.2, description: "The path forward emerges..." },
+        { x: 65, y: 165, scale: 3.4, duration: 4.5, transitionSpeed: 3.2, description: "The path forward emerges..." },
+        { x: 50, y: 0, scale: 2, duration: 3.3, transitionSpeed: 2.6, description: "Enemies lurk in the shadows." },
+        { x: 65, y: 80, scale: 3, duration: 4.5, transitionSpeed: 3.2, description: "The path forward emerges..." },
+        { x: 35, y: 150, scale: 3.2, duration: 4.5, transitionSpeed: 3.2, description: "The path forward emerges..." },
+        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 2, description: "A world of intrigue and politics awaits..." },
       ]
     },
     {
@@ -84,10 +87,13 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-7.png",
       title: "The Plot",
       focusPoints: [
-        { x: 55, y: 45, scale: 1.3, duration: 2.4, transitionSpeed: 2.7, description: "The plot thickens like morning fog..." },
-        { x: 15, y: 25, scale: 2.8, duration: 3.9, transitionSpeed: 3.8, description: "Secrets begin to unfold..." },
-        { x: 75, y: 55, scale: 1.6, duration: 2.2, transitionSpeed: 2.2, description: "Hidden agendas come to light." },
-        { x: 40, y: 70, scale: 2.3, duration: 4.8, transitionSpeed: 3.3, description: "Not everything is as it seems." },
+        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 2, description: "A world of intrigue and politics awaits..." },
+        { x: 30, y: -25, scale: 2.6, duration: 3.9, transitionSpeed: 3.8, description: "Secrets begin to unfold..." },
+        { x: 70, y: -30, scale: 2.8, duration: 2, transitionSpeed: 3.8, description: "Secrets begin to unfold..." },
+        { x: 30, y: 45, scale: 2.8, duration: 3.9, transitionSpeed: 3.8, description: "Secrets begin to unfold..." },
+        { x: 70, y: 45, scale: 3, duration: 3.9, transitionSpeed: 3.8, description: "Secrets begin to unfold..." },
+        { x: 50, y: 115, scale: 2.4, duration: 3.9, transitionSpeed: 3.8, description: "Secrets begin to unfold..." },
+        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 2, description: "A world of intrigue and politics awaits..." },
       ]
     },
     {
