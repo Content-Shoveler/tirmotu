@@ -11,9 +11,10 @@ export const comicData: ComicData = {
       title: "The Game",
       focusPoints: [
         { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 2.3, description: "A world of intrigue and politics awaits..." },
-        { x: 50, y: -10, scale: 2.2, duration: 3.2, transitionSpeed: 3.2, description: "The hero begins their journey..." },
+        { x: 30, y: -35, scale: 3, duration: 3.2, transitionSpeed: 3.2, description: "The hero begins their journey..." },
+        { x: 75, y: -50, scale: 3.5, duration: 3.2, transitionSpeed: 10, description: "The hero begins their journey..." },
         { x: 50, y: 50, scale: 2.5, duration: 2.5, transitionSpeed: 2.8, description: "Shadows lurk in every corner." },
-        { x: 50, y: 115, scale: 2.3, duration: 2.7, transitionSpeed: 3.5, description: "What lies ahead is unknown." },
+        { x: 50, y: 135, scale: 3, duration: 2.7, transitionSpeed: 3.5, description: "What lies ahead is unknown." },
         { x: 50, y: 50, scale: 1, duration: 3.5, transitionSpeed: 2.5, description: "The first steps are always the hardest." },
       ]
     },
@@ -49,11 +50,10 @@ export const comicData: ComicData = {
       imageUrl: "/comic/page-4.png",
       title: "Great Houses",
       focusPoints: [
-        { x: 50, y: 40, scale: 1.4, duration: 1.6, transitionSpeed: 2.7, description: "The great houses stand tall..." },
-        { x: 20, y: 30, scale: 2.1, duration: 3.5, transitionSpeed: 3.1, description: "Through strange landscapes..." },
-        { x: 85, y: 60, scale: 1.9, duration: 2.7, transitionSpeed: 2.5, description: "Ancient powers wait to be discovered." },
-        { x: 45, y: 85, scale: 2.3, duration: 4.2, transitionSpeed: 3.0, description: "Every step reveals new wonders." },
-        { x: 30, y: 55, scale: 1.5, duration: 2.0, transitionSpeed: 3.8, description: "The journey grows more treacherous." },
+        { x: 50, y: 50, scale: 1, duration: 1.8, transitionSpeed: 2.3, description: "A world of intrigue and politics awaits..." },
+        { x: 65, y: -25, scale: 2.5, duration: 3.5, transitionSpeed: 3.1, description: "Through strange landscapes..." },
+        { x: 50, y: 140, scale: 2.5, duration: 4, transitionSpeed: 60, description: "A world of intrigue and politics awaits..." },
+        { x: 50, y: 50, scale: 1, duration: 5, transitionSpeed: 5, description: "A world of intrigue and politics awaits..." },
       ]
     },
     {
