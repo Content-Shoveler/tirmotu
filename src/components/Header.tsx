@@ -2,6 +2,8 @@ import { Group, Box, MantineColorScheme } from '@mantine/core';
 import Toolbar from './Toolbar';
 import Title from './Title';
 import Navigation from './Navigation';
+import Timer from './Timer';
+import { FocusPoint } from '@/utils/types';
 
 interface HeaderProps {
   title?: string;
@@ -13,6 +15,7 @@ interface HeaderProps {
   onPlayPause: () => void;
   toggleColorScheme: () => void;
   colorScheme: MantineColorScheme;
+  currentFocusPoint: FocusPoint | null;
 }
 
 export default function Header({
@@ -24,7 +27,8 @@ export default function Header({
   onPrev,
   onPlayPause,
   toggleColorScheme,
-  colorScheme
+  colorScheme,
+  currentFocusPoint
 }: HeaderProps) {
   return (
     <Box
@@ -32,13 +36,19 @@ export default function Header({
       h={60}
       style={{
         display: 'flex',
-        alignItems: 'center',
-        padding: '0 16px',
+        flexDirection: 'column',
+        padding: '0',
         borderBottom: '1px solid',
         borderColor: colorScheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
-      <Group justify="space-between" style={{ width: '100%' }}>
+      {/* Timer at the very top */}
+      <Box style={{ width: '100%', position: 'absolute', top: 0, left: 0, right: 0 }}>
+        <Timer isPlaying={isPlaying} currentFocusPoint={currentFocusPoint} />
+      </Box>
+      <Group justify="space-between" style={{ width: '100%', padding: '0 16px', flex: 1, alignItems: 'center' }}>
         <Toolbar toggleColorScheme={toggleColorScheme} colorScheme={colorScheme} />
         
         <Box style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>

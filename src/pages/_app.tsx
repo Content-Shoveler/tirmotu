@@ -128,6 +128,7 @@ export default function App({ Component, pageProps }: AppProps) {
     onNext: navigationState?.nextPoint || (isHomePage ? startReading : noopHandler),
     onPrev: navigationState?.prevPoint || defaultBackHandler,
     onPlayPause: navigationState?.toggleAutoPlay || noopHandler,
+    currentFocusPoint: navigationState?.currentFocusPoint || null,
   };
   
   const footerState = {
@@ -167,6 +168,7 @@ export default function App({ Component, pageProps }: AppProps) {
             onPlayPause={headerState.onPlayPause}
             toggleColorScheme={toggleColorScheme}
             colorScheme={colorScheme}
+            currentFocusPoint={headerState.currentFocusPoint}
           />
         </AppShell.Header>
         
