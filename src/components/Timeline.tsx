@@ -149,13 +149,11 @@ export default function Timeline({
           backgroundColor: isDark ? 'rgba(200, 200, 200, 0.2)' : 'rgba(0, 0, 0, 0.1)',
         },
         bar: {
-          backgroundColor: isDark ? 'white' : 'black',
-        },
-        thumb: {
-          backgroundColor: isDark ? 'white' : 'black',
+          backgroundColor: isDark ? 'white' : 'gray',
         },
         mark: {
-          backgroundColor: isDark ? 'white' : 'gray',
+          backgroundColor: isDark ? 'white' : '#444',
+          borderColor: isDark ? 'black' : 'white',
           width: '20px',
           height: '20px',
           marginTop: '-6px',
