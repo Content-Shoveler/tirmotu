@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { AnimatePresence } from 'framer-motion';
 import { MantineProvider, createTheme } from '@mantine/core';
+import { useLocalStorage } from '@mantine/hooks';
 import { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import '@mantine/core/styles.css';
@@ -10,19 +11,28 @@ import '@/styles/globals.css';
 
 // Define Mantine theme
 const theme = createTheme({
-  // Default theme settings - can be customized later
-  colorScheme: 'dark',
+  // Default theme settings
+  fontFamily: 'system-ui, -apple-system, sans-serif',
+  fontFamilyMonospace: 'Monaco, Courier, monospace',
+  headings: { fontFamily: 'system-ui, -apple-system, sans-serif' },
+  defaultRadius: 'md',
 });
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const [navigationDirection, setNavigationDirection] = useState<"forward" | "backward">("forward");
   const [prevPath, setPrevPath] = useState<string>("");
-  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('dark');
+  // Use localStorage to persist color scheme
+  const [colorScheme, setColorScheme] = useLocalStorage<'light' | 'dark'>({
+    key: 'mantine-color-scheme',
+    defaultValue: 'dark',
+  });
   
   // Toggle color scheme
   const toggleColorScheme = () => {
-    setColorScheme(current => current === 'dark' ? 'light' : 'dark');
+    const newColorScheme = colorScheme === 'dark' ? 'light' : 'dark';
+    setColorScheme(newColorScheme);
+    console.log('Theme toggled to:', newColorScheme);
   };
   
   // Add router change event listeners for debugging
@@ -72,8 +82,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <MantineProvider
-      theme={{ ...theme, colorScheme }}
-      defaultColorScheme="dark"
+      theme={theme}
+      forceColorScheme={colorScheme}
     >
       <Layout toggleColorScheme={toggleColorScheme} colorScheme={colorScheme}>
         <AnimatePresence

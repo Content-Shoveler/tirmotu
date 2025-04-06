@@ -1,82 +1,84 @@
-# Tirmotu - Immersive Comic Viewer
+# Tirmotu - Comic Viewer
 
-An interactive comic viewing experience with animated transitions, focus points, and immersive storytelling.
+An immersive comic viewing experience built with Next.js, Mantine UI, and Framer Motion.
 
 ## Features
 
-- Guided comic viewing experience with smooth transitions between focus points
-- Animated page transitions for a cinematic feel
-- Interactive timeline with visual markers for navigation
-- Auto-play functionality for hands-free viewing
+- Interactive comic viewing with focus points and panels
+- Smooth animations and transitions
+- Timeline slider for easy navigation
 - Dark/light theme support
-- Fully responsive design
+- Responsive design for all devices
 
-## Technologies
+## Tech Stack
 
-- **Next.js**: React framework for server-rendered applications
-- **Mantine UI**: Component library for building the interface
-- **Framer Motion**: Animation library for smooth transitions
-- **Tabler Icons**: Clean, consistent icon set
-
-## Architecture
-
-The application uses Next.js for server-side rendering and static site generation. Key components:
-
-- `ComicViewer`: Core component that displays comic pages and handles focus point transitions
-- `useComicNavigation`: Custom hook that manages navigation state and logic
-- `Slide Controls`: Interactive timeline slider for navigating between focus points
-- `Theme Management`: Light/dark theme support using Mantine's color scheme
+- **Framework**: [Next.js](https://nextjs.org/)
+- **UI Library**: [Mantine](https://mantine.dev/)
+- **Icons**: [Tabler Icons](https://tabler-icons.io/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **State Management**: React Hooks
+- **Styling**: Mantine's built-in styling system
 
 ## Getting Started
 
+### Prerequisites
+
+- Node.js 18+ 
+- Yarn package manager
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+
 ```bash
-# Install dependencies
-yarn
+yarn install
+```
 
-# Run development server
+3. Run the development server:
+
+```bash
 yarn dev
-
-# Build for production
-yarn build
-
-# Start production server
-yarn start
 ```
 
-## Data Structure
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Comic data is structured as follows:
+## Project Structure
 
-```typescript
-interface ComicData {
-  title: string;
-  description: string;
-  pages: ComicPage[];
-}
+- `/public/comic/` - Comic page images
+- `/src/components/` - React components
+- `/src/data/` - Comic data and configuration
+- `/src/hooks/` - Custom React hooks
+- `/src/pages/` - Next.js pages
+- `/src/styles/` - Global styles
+- `/src/utils/` - Utility functions and types
 
-interface ComicPage {
-  id: number;
-  imageUrl: string;
-  focusPoints: FocusPoint[];
-  title?: string;
-}
+## Key Components
 
-interface FocusPoint {
-  x: number;        // Horizontal position (0-100%)
-  y: number;        // Vertical position (0-100%)
-  scale: number;    // Zoom level
-  duration: number; // Seconds to stay on this point
-  transitionSpeed?: number;
-  description?: string;
-}
-```
-
-## PWA Support
-
-The application includes Progressive Web App support, allowing it to be installed on mobile devices and used offline.
+- `ComicViewer` - Core component for viewing the comic with focus points
+- `ThemeToggle` - Dark/light mode toggle button
+- `Layout` - Main layout wrapper for the application
 
 ## Development
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Running Tests
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load the Geist font.
+```bash
+yarn test
+```
+
+### Building for Production
+
+```bash
+yarn build
+```
+
+Then start the production server:
+
+```bash
+yarn start
+```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

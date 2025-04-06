@@ -31,14 +31,14 @@ export default function Home() {
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </Head>
       
-      <Container 
-        h="100vh" 
-        display="flex" 
-        style={{ 
-          alignItems: 'center', 
-          justifyContent: 'center'
-        }}
-      >
+  <Container 
+    h="100vh" 
+    display="flex" 
+    style={{ 
+      alignItems: 'center', 
+      justifyContent: 'center'
+    }}
+  >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

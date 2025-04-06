@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button, Loader, Tooltip, Box, Group, Center, Text } from '@mantine/core';
+import { Button, Loader, Tooltip, Box, Group, Center, Text, useMantineColorScheme } from '@mantine/core';
 import { IconPlayerPlayFilled, IconPlayerPauseFilled, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import useComicNavigation from '@/hooks/useComicNavigation';
 import { FocusPoint } from '@/utils/types';
@@ -17,6 +17,7 @@ interface ComicViewerProps {
 }
 
 export default function ComicViewer({ pageId }: ComicViewerProps) {
+  const { colorScheme } = useMantineColorScheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [viewportDimensions, setViewportDimensions] = useState({ width: 0, height: 0 });
@@ -182,8 +183,8 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               transform: 'translateX(-50%)',
               maxWidth: '80%',
               padding: '10px 16px',
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              color: 'white',
+              backgroundColor: colorScheme === 'dark' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+              color: colorScheme === 'dark' ? 'white' : 'black',
               borderRadius: '8px',
               zIndex: 30,
               textAlign: 'center',
@@ -301,7 +302,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
                     left: `${(index / (totalNavigationPoints - 1)) * 100}%`,
                     width: isCurrentPoint ? '10px' : isPageStart ? '8px' : '6px',
                     height: isCurrentPoint ? '10px' : isPageStart ? '8px' : '6px',
-                    backgroundColor: 'white',
+                    backgroundColor: colorScheme === 'dark' ? 'white' : 'black',
                     opacity: index <= absoluteIndex 
                       ? 1 
                       : isPageStart ? 0.8 : 0.5,
@@ -357,7 +358,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               width: `${(absoluteIndex / (totalNavigationPoints - 1)) * 100}%`,
               height: '4px',
               transform: 'translateY(-50%)',
-              backgroundColor: 'white',
+              backgroundColor: colorScheme === 'dark' ? 'white' : 'black',
               borderRadius: '2px',
               transition: 'width 0.3s ease-in-out',
             }}
@@ -376,12 +377,12 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
             left: '50%',
             transform: 'translateX(-50%)',
             padding: '8px 16px',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            backgroundColor: colorScheme === 'dark' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
             borderRadius: '8px',
             zIndex: 20,
           }}
         >
-          <Text color="white" fw={500}>{currentPage.title}</Text>
+          <Text color={colorScheme === 'dark' ? 'white' : 'black'} fw={500}>{currentPage.title}</Text>
         </Box>
       )}
       
@@ -399,7 +400,7 @@ export default function ComicViewer({ pageId }: ComicViewerProps) {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              backgroundColor: colorScheme === 'dark' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
