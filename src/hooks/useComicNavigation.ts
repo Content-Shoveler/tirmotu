@@ -218,24 +218,36 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
    * Safely navigate to a page, handling potential route cancellation errors
    */
   const safeNavigate = useCallback((path: string) => {
-    setIsLoading(true);
+    // Don't do anything if we're already on the page (without the hash)
+    const currentPath = router.asPath.split('#')[0]; // Ignore hash for comparison
+    const targetPath = path.split('#')[0];
     
-    // Use a timeout to reduce chance of route cancellation errors
-    setTimeout(() => {
-      router.push(path).catch((error) => {
-        // If there's a route cancellation error, ignore it
-        if (error.cancelled) {
-          console.log('Navigation cancelled, but it\'s expected');
-        } else {
-          console.error('Navigation error:', error);
+    if (currentPath === targetPath) {
+      console.log(`Already at path ${targetPath}, only updating hash if needed`);
+      
+      // Update hash if needed
+      if (path.includes('#') && currentPath !== path) {
+        const hash = path.split('#')[1];
+        if (hash) {
+          const focusIndex = parseInt(hash, 10);
+          if (!isNaN(focusIndex)) {
+            setCurrentFocusPointIndex(focusIndex);
+            updateUrlHash(focusIndex);
+          }
         }
-        // Still update loading state
-        setIsLoading(false);
-      });
-    }, 0);
+      }
+      
+      return true;
+    }
+    
+    console.log(`Navigation: Navigating from ${router.asPath} to ${path}`);
+    
+    // Important: Use router.push WITHOUT any setTimeout
+    setIsLoading(true);
+    window.location.href = path;
     
     return true;
-  }, [router]);
+  }, [router, isLoading, updateUrlHash]);
   
   /**
    * Navigation based on absolute index
@@ -431,9 +443,31 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
   }, [isAutoPlaying, currentFocusPoint, nextPoint]);
   
   /**
-   * Sync with URL parameter when page changes
+   * Sync with URL parameter when page changes and add navigation event handlers
    */
   useEffect(() => {
+    // Handle route change events
+    const handleRouteChangeStart = () => {
+      console.log('Route change starting');
+      setIsLoading(true);
+    };
+    
+    const handleRouteChangeComplete = () => {
+      console.log('Route change complete');
+      setIsLoading(false);
+    };
+    
+    const handleRouteChangeError = (err: Error) => {
+      console.error('Route change error:', err);
+      setIsLoading(false);
+    };
+    
+    // Add event listeners
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+    router.events.on('routeChangeError', handleRouteChangeError);
+    
+    // Normal URL parameter sync
     if (router.isReady && router.query.pageNumber) {
       const pageId = parseInt(router.query.pageNumber as string, 10);
       if (!isNaN(pageId) && pageId !== currentPageId) {
@@ -447,6 +481,13 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
         setIsLoading(false);
       }
     }
+    
+    // Cleanup event listeners
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+      router.events.off('routeChangeComplete', handleRouteChangeComplete);
+      router.events.off('routeChangeError', handleRouteChangeError);
+    };
   }, [router.isReady, router.query.pageNumber, router.pathname, currentPageId]);
   
   /**
