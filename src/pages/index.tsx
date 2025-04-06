@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Button, Card, Container, Stack, Text, Group, Title } from '@mantine/core';
 import { motion } from 'framer-motion';
@@ -144,7 +143,7 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
         absoluteIndex: HOME_INDEX, // Home is at index 0
         // Add COMIC_START_INDEX to account for homepage and spacing offsets
         totalNavigationPoints: totalFocusPoints + COMIC_START_INDEX + 1, // +1 for end page
-        title: 'Immersive Comic Experience',
+        title: 'Tirmotu: Rise of the Suzeran',
         nextPoint: startReading,
         prevPoint: prevPoint, // Use the prevPoint function for circular navigation
         navigateToAbsoluteIndex: navigateToAbsoluteIndex,
@@ -158,8 +157,8 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
   return (
     <>
       <Head>
-        <title>Immersive Comic Experience</title>
-        <meta name="description" content="An immersive comic viewing experience with focus points and smooth transitions" />
+        <title>Tirmotu: Rise of the Suzeran</title>
+        <meta name="description" content="Follow young Sita Suzeran's journey through the political landscape of Tirmotu" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
@@ -190,13 +189,13 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
           >
             <Stack>
               <Title order={1}>
-                Immersive Comic Experience
+                Tirmotu: Rise of the Suzeran
               </Title>
               
               <Text size="lg" mt="xl">
-                Welcome to a revolutionary way to experience comics. Our guided viewing system
-                will lead you through each panel with cinematic transitions, creating an
-                immersive narrative flow unlike traditional comic reading.
+                Enter the political landscape of Tirmotu, where Great Houses battle for influence and power.
+                Follow young Sita Suzeran&apos;s journey as she navigates the treacherous world of alliances and rivalries,
+                where shadows lurk in every corner and trust is a rare currency.
               </Text>
               
               <Group justify="center" mt="xl" gap="md">
@@ -206,16 +205,7 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
                   loading={isLoading}
                   onClick={startReading}
                 >
-                  Start Reading
-                </Button>
-                
-                <Button
-                  component={Link}
-                  href="/about"
-                  variant="outline"
-                  size="lg"
-                >
-                  Learn More
+                  Begin the Journey
                 </Button>
               </Group>
             </Stack>

@@ -50,7 +50,7 @@ const Page: NextPage<PageProps> = ({
         isLoading: false,
         absoluteIndex: comicData.pages.reduce((total, page) => total + page.focusPoints.length, 0) + NAVIGATION_CONSTANTS.COMIC_START_INDEX,
         totalNavigationPoints: comicData.pages.reduce((total, page) => total + page.focusPoints.length, 0),
-        title: "The End",
+        title: "The Journey Continues...",
         // Use main system's nextPoint but override the destination
         nextPoint: goToHomePage,
         // Use the main system's prevPoint function for consistent behavior
@@ -108,17 +108,19 @@ const Page: NextPage<PageProps> = ({
         }}
       >
         <Stack align="center" gap="lg">
-          <Title order={1} size="h1" mb="md">The End</Title>
+          <Title order={1} size="h1" mb="md">The Journey Continues...</Title>
           <Text size="lg" maw={600} mb="xl">
-            Thank you for reading our comic. We hope you enjoyed the journey through Tirmotu!
+            Young Sita Suzeran&apos;s path through the political landscape of Tirmotu has only begun.
+            As she navigates the complex web of Great Houses and ancient rivalries, her decisions will
+            shape the future of this world. What challenges await her in the continuing saga?
           </Text>
           <Group>
-            <Button onClick={goToHomePage}>Return Home</Button>
+            <Button onClick={goToHomePage}>Return to Beginning</Button>
             <Button 
               variant="outline"
               onClick={() => navActions.prevPage()}
             >
-              Previous Page
+              Previous Chapter
             </Button>
           </Group>
         </Stack>
