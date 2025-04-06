@@ -24,7 +24,7 @@ export default function Timeline({
   // We'll offset the actual comic content to create spacing between Home, Pages, and End
   const HOME_INDEX = 0;
   const COMIC_START_INDEX = 2; // Leave 2 slots for Home (position 0) and separation (position 1)
-  const END_INDEX = totalNavigationPoints - 1;
+  const END_INDEX = totalNavigationPoints + COMIC_START_INDEX;
   
   // Generate comic page marks (filtering out nulls first to avoid TypeScript errors)
   const pageMarks = comicData.pages
@@ -116,7 +116,7 @@ export default function Timeline({
       data-timeline={timelineData}
       onChange={handleSliderChange}
       min={0}
-      max={totalNavigationPoints - 1}
+      max={END_INDEX}
       step={1}
       marks={marks}
       label={getLabel}
