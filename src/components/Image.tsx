@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Center, Loader } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { FocusPoint } from '@/utils/types';
+import { DEVICE_MULTIPLIERS } from '@/utils/device-multipliers';
 
 interface ImageProps {
   src: string;
@@ -19,6 +21,12 @@ export default function ComicImage({
 }: ImageProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   
+  // Device detection with Mantine hooks
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isPortrait = useMediaQuery('(orientation: portrait)');
+  // Add explicit mobile landscape detection
+  const isMobileLandscape = useMediaQuery('(max-width: 896px) and (orientation: landscape)');
+  
   // Reset image loaded state when image src changes
   useEffect(() => {
     setImageLoaded(false);
@@ -28,24 +36,44 @@ export default function ComicImage({
   const getTransformForFocusPoint = (focusPoint: FocusPoint | null) => {
     if (!focusPoint) return { x: 0, y: 0, scale: 1 };
     
+    // Get the appropriate multipliers based on device and orientation
+    let multipliers;
+    if (isMobileLandscape) {
+      // Prioritize the explicit landscape detection
+      multipliers = DEVICE_MULTIPLIERS.MOBILE.LANDSCAPE;
+    } else if (isMobile && isPortrait) {
+      multipliers = DEVICE_MULTIPLIERS.MOBILE.PORTRAIT;
+    } else {
+      multipliers = DEVICE_MULTIPLIERS.DESKTOP;
+    }
+    
     // For panning to work properly with CSS transforms:
     // - We need to make the transform move in the opposite direction 
     // - Subtracting from 50% centers the focus point
     // - Multiply by viewport dimension and divide by 100 to convert percentage to pixels
-    const x = -((focusPoint.x - 50) / 100) * viewportDimensions.width;
-    const y = -((focusPoint.y - 50) / 100) * viewportDimensions.height;
+    // - Apply device-specific multipliers
+    const x = -((focusPoint.x - 50) / 100) * viewportDimensions.width * multipliers.X;
+    const y = -((focusPoint.y - 50) / 100) * viewportDimensions.height * multipliers.Y;
     
     console.log('Transform values:', { 
       x, y, 
-      scale: focusPoint.scale, 
+      scale: focusPoint.scale * multipliers.SCALE, 
       focusPoint,
-      viewportDimensions 
+      viewportDimensions,
+      device: isMobileLandscape ? 'mobile-landscape' : 
+              (isMobile && isPortrait ? 'mobile-portrait' : 'desktop'),
+      detectionValues: { 
+        isMobile, 
+        isPortrait, 
+        isMobileLandscape,
+        viewport: typeof window !== 'undefined' ? `${window.innerWidth}x${window.innerHeight}` : 'SSR'
+      }
     });
     
     return {
       x,
       y,
-      scale: focusPoint.scale
+      scale: focusPoint.scale * multipliers.SCALE
     };
   };
   
