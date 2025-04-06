@@ -185,8 +185,15 @@ export default function useComicNavigation(initialPageId: number): [ComicNavigat
   }, [absoluteIndex, navigateToAbsoluteIndex]);
   
   const prevPoint = useCallback(() => {
+    // If we're on page 1 and at the first focus point, go back to homepage
+    if (currentPageId === 1 && currentFocusPointIndex === 0) {
+      setIsLoading(true);
+      router.push('/');
+      return true;
+    }
+    
     return navigateToAbsoluteIndex(absoluteIndex - 1);
-  }, [absoluteIndex, navigateToAbsoluteIndex]);
+  }, [absoluteIndex, navigateToAbsoluteIndex, currentPageId, currentFocusPointIndex, router]);
   
   const nextPage = useCallback(() => {
     if (hasNextPage) {

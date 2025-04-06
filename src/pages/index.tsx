@@ -87,6 +87,21 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
     return false;
   }, [router]);
   
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Right arrow and space move forward to first page
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        startReading();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [startReading]);
+  
   // Create a simplified navigation state for the home page
   useEffect(() => {
     if (updateAppNavigationState) {

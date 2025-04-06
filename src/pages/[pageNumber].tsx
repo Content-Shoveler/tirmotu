@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
+import { useEffect } from 'react';
 import Head from 'next/head';
 import { Container, Stack, Title, Text, Group, Button } from '@mantine/core';
 import { comicData } from '@/data/comic-data';
@@ -26,8 +27,31 @@ const Page: NextPage<PageProps> = ({
   // Check if this is the end page (one number more than there are comic pages)
   const isEndPage = pageNumber === comicData.pages.length + 1;
   
+  // Global keyboard navigation - works for all pages
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Special handling for end page
+      if (isEndPage) {
+        // Right arrow and space return to home from end page
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+          router.push('/');
+        }
+        // Left arrow goes to previous page from end page
+        else if (e.key === 'ArrowLeft') {
+          router.push(`/${comicData.pages[comicData.pages.length - 1].id}`);
+        }
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [router, isEndPage]);
+  
   // If it's the end page, display a special "End" message
   if (isEndPage) {
+    
     return (
       <Container 
         h="calc(100vh - 120px)" // Account for header and footer (60px each)
