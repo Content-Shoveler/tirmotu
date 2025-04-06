@@ -1,0 +1,22 @@
+/* Minimal global styles - most styling managed by Mantine */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  max-width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar across browsers while allowing scrolling */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
