@@ -6,6 +6,7 @@ import { Container, Stack, Title, Text, Group, Button } from '@mantine/core';
 import { comicData } from '@/data/comic-data';
 import ComicViewer from '@/components/ComicViewer';
 import { NAVIGATION_CONSTANTS } from '@/utils/navigation-constants';
+import useComicNavigation from '@/hooks/useComicNavigation';
 
 import { ComicNavigationState } from '@/components/ComicViewer';
 
@@ -28,16 +29,16 @@ const Page: NextPage<PageProps> = ({
   // Check if this is the end page (one number more than there are comic pages)
   const isEndPage = pageNumber === comicData.pages.length + 1;
   
-  // Navigation functions for end page
+  // Use the main navigation hook even for the end page, which will give us consistent behavior
+  // Only grab the actions we need, ignoring the state
+  const navActions = useComicNavigation(pageNumber)[1];
+  
+  // Simple forward navigation for home page
   const goToHomePage = useCallback(() => {
     router.push('/');
   }, [router]);
 
-  const goToLastPage = useCallback(() => {
-    router.push(`/${comicData.pages[comicData.pages.length - 1].id}`);
-  }, [router]);
-
-  // Create the end page navigation state
+  // Create the end page navigation state using the core navigation system
   useEffect(() => {
     if (updateAppNavigationState && isEndPage) {
       const endNavigationState: ComicNavigationState = {
@@ -50,8 +51,10 @@ const Page: NextPage<PageProps> = ({
         absoluteIndex: comicData.pages.reduce((total, page) => total + page.focusPoints.length, 0) + NAVIGATION_CONSTANTS.COMIC_START_INDEX,
         totalNavigationPoints: comicData.pages.reduce((total, page) => total + page.focusPoints.length, 0),
         title: "The End",
+        // Use main system's nextPoint but override the destination
         nextPoint: goToHomePage,
-        prevPoint: goToLastPage,
+        // Use the main system's prevPoint function for consistent behavior
+        prevPoint: navActions.prevPage,
         navigateToAbsoluteIndex: (index) => {
           // Handle specific navigation from timeline
           if (index === NAVIGATION_CONSTANTS.HOME_INDEX) {
@@ -59,15 +62,15 @@ const Page: NextPage<PageProps> = ({
             return true;
           }
           
-          // Other indices handled by router navigation
-          return false;
+          // Use the main system for other navigation
+          return navActions.navigateToAbsoluteIndex(index);
         },
         toggleAutoPlay: () => false
       };
       
       updateAppNavigationState(endNavigationState);
     }
-  }, [updateAppNavigationState, pageNumber, goToHomePage, goToLastPage, isEndPage]);
+  }, [updateAppNavigationState, pageNumber, goToHomePage, navActions, isEndPage]);
 
   // Global keyboard navigation - works for all pages
   useEffect(() => {
@@ -78,9 +81,9 @@ const Page: NextPage<PageProps> = ({
         if (e.key === 'ArrowRight' || e.key === ' ') {
           goToHomePage();
         }
-        // Left arrow goes to previous page from end page
+        // Left arrow goes to previous page from end page using the main navigation
         else if (e.key === 'ArrowLeft') {
-          goToLastPage();
+          navActions.prevPage();
         }
       }
     };
@@ -89,7 +92,7 @@ const Page: NextPage<PageProps> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isEndPage, goToHomePage, goToLastPage]);
+  }, [isEndPage, goToHomePage, navActions]);
   
   // If it's the end page, display a special "End" message
   if (isEndPage) {
@@ -113,7 +116,7 @@ const Page: NextPage<PageProps> = ({
             <Button onClick={goToHomePage}>Return Home</Button>
             <Button 
               variant="outline"
-              onClick={goToLastPage}
+              onClick={() => navActions.prevPage()}
             >
               Previous Page
             </Button>
