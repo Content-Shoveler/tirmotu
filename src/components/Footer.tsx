@@ -6,13 +6,15 @@ interface FooterProps {
   totalNavigationPoints: number;
   navigateToAbsoluteIndex: (index: number) => boolean;
   colorScheme: MantineColorScheme;
+  currentPageId?: number; // Add currentPageId prop
 }
 
 export default function Footer({
   absoluteIndex,
   totalNavigationPoints,
   navigateToAbsoluteIndex,
-  colorScheme
+  colorScheme,
+  currentPageId = 0 // Default to homepage if not provided
 }: FooterProps) {
   return (
     <Box
@@ -33,6 +35,7 @@ export default function Footer({
         totalNavigationPoints={totalNavigationPoints}
         navigateToAbsoluteIndex={navigateToAbsoluteIndex}
         data-timeline={true}
+        currentPageId={currentPageId}
       />
     </Box>
   );

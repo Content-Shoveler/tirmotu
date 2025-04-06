@@ -2,28 +2,31 @@ import { Slider, SliderProps, useMantineColorScheme } from '@mantine/core';
 import { 
   getFocusPointByAbsoluteIndex,
   comicData,
-  getAbsoluteIndexFromPageAndFocusPoint 
+  getAbsoluteIndexFromPageAndFocusPoint
 } from '@/data/comic-data';
+import { NAVIGATION_CONSTANTS } from '@/utils/navigation-constants';
 
 interface TimelineProps {
   absoluteIndex: number;
   totalNavigationPoints: number;
   navigateToAbsoluteIndex: (index: number) => boolean;
   'data-timeline'?: boolean;
+  currentPageId: number; // Add current page ID to better handle end page
 }
 
 export default function Timeline({ 
   absoluteIndex, 
   totalNavigationPoints, 
   navigateToAbsoluteIndex,
-  'data-timeline': timelineData
+  'data-timeline': timelineData,
+  currentPageId
 }: TimelineProps) {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
   
-  // We'll offset the actual comic content to create spacing between Home, Pages, and End
-  const HOME_INDEX = 0;
-  const COMIC_START_INDEX = 2; // Leave 2 slots for Home (position 0) and separation (position 1)
+  // Use constants from navigation-constants.ts
+  const HOME_INDEX = NAVIGATION_CONSTANTS.HOME_INDEX;
+  const COMIC_START_INDEX = NAVIGATION_CONSTANTS.COMIC_START_INDEX;
   const END_INDEX = totalNavigationPoints + COMIC_START_INDEX;
   
   // Generate comic page marks (filtering out nulls first to avoid TypeScript errors)
@@ -54,7 +57,7 @@ export default function Timeline({
     // Add filtered comic page marks
     ...pageMarks,
     
-    // End page mark (set to totalNavigationPoints - 1)
+    // End page mark
     { value: END_INDEX, label: 'End' }
   ];
   
@@ -67,7 +70,7 @@ export default function Timeline({
     if (value === END_INDEX) return "The End";
     
     // Empty slot reserved for spacing
-    if (value === 1) return "";
+    if (value === NAVIGATION_CONSTANTS.SEPARATOR_INDEX) return "";
     
     // Adjust the index back to match comic data indexing
     const adjustedValue = value - COMIC_START_INDEX;
@@ -88,7 +91,7 @@ export default function Timeline({
     if (value === HOME_INDEX || value === END_INDEX) return 16;
     
     // Empty slot reserved for spacing - make thumb invisible
-    if (value === 1) return 0;
+    if (value === NAVIGATION_CONSTANTS.SEPARATOR_INDEX) return 0;
     
     // Adjust the index back to match comic data indexing
     const adjustedValue = value - COMIC_START_INDEX;
@@ -105,14 +108,30 @@ export default function Timeline({
     console.log(`Timeline: Navigating to absolute index ${value}`);
     
     // Skip the spacer mark - if clicked, do nothing
-    if (value === 1) return false;
+    if (value === NAVIGATION_CONSTANTS.SEPARATOR_INDEX) return false;
     
     return navigateToAbsoluteIndex(value);
   };
   
+  // Determine correct display value for special cases
+  const getDisplayValue = () => {
+    // Handle end page specifically to ensure correct display
+    if (currentPageId === comicData.pages.length + 1) {
+      return END_INDEX;
+    }
+    
+    // Handle homepage specifically
+    if (currentPageId === 0) {
+      return HOME_INDEX;
+    }
+    
+    // Otherwise use the calculated absoluteIndex
+    return absoluteIndex;
+  };
+  
   return (
     <Slider
-      value={absoluteIndex}
+      value={getDisplayValue()}
       data-timeline={timelineData}
       onChange={handleSliderChange}
       min={0}
@@ -120,7 +139,7 @@ export default function Timeline({
       step={1}
       marks={marks}
       label={getLabel}
-      thumbSize={getThumbSize(absoluteIndex)}
+      thumbSize={getThumbSize(getDisplayValue())}
       styles={() => ({
         root: {
           width: '100%',

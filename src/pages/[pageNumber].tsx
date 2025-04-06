@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import { Container, Stack, Title, Text, Group, Button } from '@mantine/core';
 import { comicData } from '@/data/comic-data';
 import ComicViewer from '@/components/ComicViewer';
+import { NAVIGATION_CONSTANTS } from '@/utils/navigation-constants';
 
 import { ComicNavigationState } from '@/components/ComicViewer';
 
@@ -27,18 +28,59 @@ const Page: NextPage<PageProps> = ({
   // Check if this is the end page (one number more than there are comic pages)
   const isEndPage = pageNumber === comicData.pages.length + 1;
   
+  // Navigation functions for end page
+  const goToHomePage = useCallback(() => {
+    router.push('/');
+  }, [router]);
+
+  const goToLastPage = useCallback(() => {
+    router.push(`/${comicData.pages[comicData.pages.length - 1].id}`);
+  }, [router]);
+
+  // Create the end page navigation state
+  useEffect(() => {
+    if (updateAppNavigationState && isEndPage) {
+      const endNavigationState: ComicNavigationState = {
+        currentPageId: pageNumber,
+        isAutoPlaying: false,
+        hasNextPoint: true, // Enable circular navigation to home
+        hasPrevPoint: true, // Always allow back navigation
+        currentFocusPoint: null,
+        isLoading: false,
+        absoluteIndex: comicData.pages.reduce((total, page) => total + page.focusPoints.length, 0) + NAVIGATION_CONSTANTS.COMIC_START_INDEX,
+        totalNavigationPoints: comicData.pages.reduce((total, page) => total + page.focusPoints.length, 0),
+        title: "The End",
+        nextPoint: goToHomePage,
+        prevPoint: goToLastPage,
+        navigateToAbsoluteIndex: (index) => {
+          // Handle specific navigation from timeline
+          if (index === NAVIGATION_CONSTANTS.HOME_INDEX) {
+            goToHomePage();
+            return true;
+          }
+          
+          // Other indices handled by router navigation
+          return false;
+        },
+        toggleAutoPlay: () => false
+      };
+      
+      updateAppNavigationState(endNavigationState);
+    }
+  }, [updateAppNavigationState, pageNumber, goToHomePage, goToLastPage, isEndPage]);
+
   // Global keyboard navigation - works for all pages
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Special handling for end page
       if (isEndPage) {
-        // Right arrow and space return to home from end page
+        // Right arrow and space return to home from end page (circular navigation)
         if (e.key === 'ArrowRight' || e.key === ' ') {
-          router.push('/');
+          goToHomePage();
         }
         // Left arrow goes to previous page from end page
         else if (e.key === 'ArrowLeft') {
-          router.push(`/${comicData.pages[comicData.pages.length - 1].id}`);
+          goToLastPage();
         }
       }
     };
@@ -47,11 +89,11 @@ const Page: NextPage<PageProps> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [router, isEndPage]);
+  }, [isEndPage, goToHomePage, goToLastPage]);
   
   // If it's the end page, display a special "End" message
   if (isEndPage) {
-    
+
     return (
       <Container 
         h="calc(100vh - 120px)" // Account for header and footer (60px each)
@@ -68,10 +110,10 @@ const Page: NextPage<PageProps> = ({
             Thank you for reading our comic. We hope you enjoyed the journey through Tirmotu!
           </Text>
           <Group>
-            <Button onClick={() => router.push('/')}>Return Home</Button>
+            <Button onClick={goToHomePage}>Return Home</Button>
             <Button 
               variant="outline"
-              onClick={() => router.push(`/${comicData.pages[comicData.pages.length - 1].id}`)}
+              onClick={goToLastPage}
             >
               Previous Page
             </Button>

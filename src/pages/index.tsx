@@ -7,9 +7,11 @@ import { motion } from 'framer-motion';
 import { ComicNavigationState } from '@/components/ComicViewer';
 import { 
   comicData, 
-  getPageAndFocusPointFromAbsoluteIndex
+  getPageAndFocusPointFromAbsoluteIndex,
+  getTotalNavigationPoints
 } from '@/data/comic-data';
 import { ComicPage } from '@/utils/types';
+import { NAVIGATION_CONSTANTS } from '@/utils/navigation-constants';
 
 interface HomeProps {
   updateAppNavigationState?: (state: ComicNavigationState) => void;
@@ -19,11 +21,22 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Define startReading with useCallback to prevent recreation on each render
+  // Define navigation functions with useCallback to prevent recreation on each render
   const startReading = useCallback(async () => {
     setIsLoading(true);
     try {
       await router.push('/1');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      setIsLoading(false);
+    }
+  }, [router]);
+  
+  // Go to end page (for circular navigation)
+  const goToEndPage = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await router.push(`/${comicData.pages.length + 1}`);
     } catch (error) {
       console.error('Navigation error:', error);
       setIsLoading(false);
@@ -46,14 +59,13 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
   const navigateToAbsoluteIndex = useCallback((index: number) => {
     console.log(`Home: Navigating to absolute index ${index}`);
     
-    // Constants for timeline spacing (must match those in Timeline.tsx)
-    const HOME_INDEX = 0;
-    const COMIC_START_INDEX = 2; // Space for Home (0) and separator (1)
+    // Use constants from navigation-constants.ts
+    const HOME_INDEX = NAVIGATION_CONSTANTS.HOME_INDEX;
+    const SEPARATOR_INDEX = NAVIGATION_CONSTANTS.SEPARATOR_INDEX;
+    const COMIC_START_INDEX = NAVIGATION_CONSTANTS.COMIC_START_INDEX;
     
     // Get the total number of focus points from the comic data
-    const totalFocusPoints = comicData.pages.reduce(
-      (total: number, page: ComicPage) => total + page.focusPoints.length, 0
-    );
+    const totalFocusPoints = getTotalNavigationPoints();
     
     // If index is HOME_INDEX (0), we stay on the home page
     if (index === HOME_INDEX) {
@@ -61,7 +73,7 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
     }
     
     // Skip the separator mark (index 1)
-    if (index === 1) {
+    if (index === SEPARATOR_INDEX) {
       return false;
     }
     
@@ -79,7 +91,7 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
       const pageAndPoint = getPageAndFocusPointFromAbsoluteIndex(adjustedIndex);
       
       if (pageAndPoint) {
-        router.push(`/${pageAndPoint.pageId}`);
+        router.push(`/${pageAndPoint.pageId}#${pageAndPoint.focusPointIndex}`);
         return true;
       }
     }
@@ -87,12 +99,20 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
     return false;
   }, [router]);
   
+  // Function to go to the previous point - circular navigation
+  const prevPoint = useCallback(() => {
+    return goToEndPage();
+  }, [goToEndPage]);
+  
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Right arrow and space move forward to first page
       if (e.key === 'ArrowRight' || e.key === ' ') {
         startReading();
+      } else if (e.key === 'ArrowLeft') {
+        // Left arrow goes to end page (circular navigation)
+        goToEndPage();
       }
     };
     
@@ -100,7 +120,7 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [startReading]);
+  }, [startReading, goToEndPage]);
   
   // Create a simplified navigation state for the home page
   useEffect(() => {
@@ -110,15 +130,15 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
         (total: number, page: ComicPage) => total + page.focusPoints.length, 0
       );
       
-      // Constants for timeline spacing (must match those in Timeline.tsx)
-      const HOME_INDEX = 0;
-      const COMIC_START_INDEX = 2; // Space for Home (0) and separator (1)
+      // Use constants from navigation-constants.ts
+      const HOME_INDEX = NAVIGATION_CONSTANTS.HOME_INDEX;
+      const COMIC_START_INDEX = NAVIGATION_CONSTANTS.COMIC_START_INDEX;
       
       const navigationState = {
         currentPageId: 0,
         isAutoPlaying: isAutoPlaying,
-        hasNextPoint: true,
-        hasPrevPoint: false,
+        hasNextPoint: true, // Always allow navigation to next
+        hasPrevPoint: true, // Enable circular navigation back to end page
         currentFocusPoint: null,
         isLoading: false,
         absoluteIndex: HOME_INDEX, // Home is at index 0
@@ -126,14 +146,14 @@ export default function Home({ updateAppNavigationState }: HomeProps) {
         totalNavigationPoints: totalFocusPoints + COMIC_START_INDEX + 1, // +1 for end page
         title: 'Immersive Comic Experience',
         nextPoint: startReading,
-        prevPoint: () => false,
+        prevPoint: prevPoint, // Use the prevPoint function for circular navigation
         navigateToAbsoluteIndex: navigateToAbsoluteIndex,
         toggleAutoPlay: toggleAutoPlay
       };
       
       updateAppNavigationState(navigationState);
     }
-  }, [updateAppNavigationState, startReading, navigateToAbsoluteIndex, toggleAutoPlay, isAutoPlaying]);
+  }, [updateAppNavigationState, startReading, prevPoint, navigateToAbsoluteIndex, toggleAutoPlay, isAutoPlaying]);
 
   return (
     <>

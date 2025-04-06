@@ -134,6 +134,7 @@ export default function App({ Component, pageProps }: AppProps) {
     absoluteIndex: navigationState?.absoluteIndex ?? defaultNavigationState.absoluteIndex,
     totalNavigationPoints: navigationState?.totalNavigationPoints ?? defaultNavigationState.totalNavigationPoints,
     navigateToAbsoluteIndex: navigationState?.navigateToAbsoluteIndex || noopHandler,
+    currentPageId: navigationState?.currentPageId ?? (isHomePage ? 0 : (isEndPage ? 13 : pageNumber || 0)),
   };
 
   return (
@@ -205,6 +206,7 @@ export default function App({ Component, pageProps }: AppProps) {
             totalNavigationPoints={footerState.totalNavigationPoints}
             navigateToAbsoluteIndex={footerState.navigateToAbsoluteIndex}
             colorScheme={colorScheme}
+            currentPageId={footerState.currentPageId}
           />
         </AppShell.Footer>
       </AppShell>
